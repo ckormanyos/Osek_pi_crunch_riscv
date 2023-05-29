@@ -11,7 +11,7 @@ with a spigot algorithm.
 
 Osek_pi_crunch_cm3 is a fascinating, educational and fun project
 that computes a up to $100,001$ decimal digits of $\pi$
-on a bare-metal ARM(R) Cortex(R)-M3 system.
+on a bare-metal RISC-V FE310 system.
 
 The backbone real-time operating system is taken directly
 from the OSEK-like OS implemented in

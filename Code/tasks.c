@@ -11,12 +11,11 @@
 
 bool pi_result_is_ok = true;
 
-void TOGGLE_BLUE_LED(void);
-void TURNON_BLUE_LED(void);
-
 TASK(T1)
 {
-  TURNON_BLUE_LED();
+  extern void pi_led_toggle(void);
+
+  pi_led_toggle();
 
   const OsEventMaskType OsWaitEventMask = (OsEventMaskType) EVT_BLINK_LED;
 
@@ -34,7 +33,7 @@ TASK(T1)
       {
         OS_ClearEvent(EVT_BLINK_LED);
 
-        TOGGLE_BLUE_LED();
+        pi_led_toggle();
       }
     }
     else

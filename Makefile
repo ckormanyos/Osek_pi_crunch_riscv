@@ -183,7 +183,8 @@ SRC_FILES := $(SRC_DIR)/Mcal/mtimer.c                                           
              $(SRC_DIR)/main.c                                                                        \
              $(SRC_DIR)/tasks.c                                                                       \
              $(SRC_DIR)/ref_app/src/mcal/mcal_gcc_cxx_completion                                      \
-             $(SRC_DIR)/ref_app/src/mcal/riscvfe310/mcal_led.c                                        \
+             $(SRC_DIR)/ref_app/src/mcal/riscvfe310/mcal_irq.cpp                                      \
+             $(SRC_DIR)/ref_app/src/mcal/riscvfe310/mcal_led.cpp                                      \
              $(SRC_DIR)/ref_app/target/micros/riscvfe310/startup/crt0.cpp                             \
              $(SRC_DIR)/ref_app/target/micros/riscvfe310/startup/crt0_init_ram.cpp                    \
              $(SRC_DIR)/ref_app/target/micros/riscvfe310/startup/crt1.cpp                             \
