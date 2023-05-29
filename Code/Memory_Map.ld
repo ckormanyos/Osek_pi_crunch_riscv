@@ -27,10 +27,10 @@ INPUT(libc.a libgcc.a)
 ******************************************************************************************/
 
 __FLASH_START_ADDRESS = 0x20000000;
-__FLASH_SIZE          = 4M;
+__FLASH_SIZE          = 64K;
 
 __STACK_START_ADDRESS = 0x80000000;
-__STACK_SIZE = 4K;
+__STACK_SIZE = 1K;
 
 __RAM_START_ADDRESS = 0x80000000 + __STACK_SIZE;
 __RAM_SIZE =  16K - __STACK_SIZE;
