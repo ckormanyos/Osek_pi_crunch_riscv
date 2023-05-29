@@ -5,6 +5,7 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
+#include <mcal_benchmark.h>
 #include <mcal_irq.h>
 #include <mcal_led.h>
 #include <mcal_led/mcal_led_port.h>
@@ -17,6 +18,13 @@ extern "C"
   void mcal_led_toggle(void)
   {
     mcal::led::led0().toggle();
+  }
+
+  void mcal_benchmark_toggle(void);
+
+  void mcal_benchmark_toggle(void)
+  {
+    mcal::led::led1().toggle();
   }
 }
 
@@ -32,4 +40,15 @@ mcal::led::led_base& mcal::led::led0()
   static led0_led_type local_led0;
 
   return local_led0;
+}
+
+mcal::led::led_base& mcal::led::led1()
+{
+  using led1_port_type = mcal::benchmark::benchmark_port_type;
+
+  using led1_led_type = mcal::led::led_port<led1_port_type>;
+
+  static led1_led_type local_led1;
+
+  return local_led1;
 }

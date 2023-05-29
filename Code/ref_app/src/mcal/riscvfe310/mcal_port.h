@@ -17,8 +17,8 @@
   {
     namespace port
     {
-      typedef void config_type;
-      void init(const config_type*);
+      using config_type = void;
+      auto init(const config_type*) -> void;
 
       template<typename addr_type,
                typename reg_type,
