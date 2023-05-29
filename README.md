@@ -14,8 +14,8 @@ that computes a up to $100,001$ decimal digits of $\pi$
 on a bare-metal RISC-V FE310 system.
 
 The backbone real-time operating system is taken directly
-from the OSEK-like OS implemented in
-[Chalandi/OSEK](https://github.com/Chalandi/OSEK)
+from the OSEK-like OS for RISC-V implemented in
+[Chalandi/OSEK_RISC-V_SiFive_FE310_SoC](https://github.com/Chalandi/OSEK_RISC-V_SiFive_FE310_SoC)
 
 # Software Details
 

@@ -5,10 +5,10 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include <OsTcb.h>
 #include <OsAPIs.h>
+#include <OsTcb.h>
 
-bool pi_result_is_ok = true;
+static bool pi_result_is_ok = true;
 
 TASK(T1)
 {
@@ -51,17 +51,21 @@ TASK(Idle)
 {
   for(;;)
   {
-    for(unsigned i = (unsigned) UINT8_C(0); i < (unsigned) UINT8_C(32); ++i)
+    for(unsigned i = (unsigned) UINT8_C(0); i < (unsigned) UINT16_C(1024); ++i)
     {
-      extern void pi_benchmark_toggle(void);
+      {
+        extern void pi_benchmark_toggle(void);
 
-      pi_benchmark_toggle();
+        pi_benchmark_toggle();
+      }
 
-      extern int pi_main(void);
+      {
+        extern int pi_main(void);
 
-      const int next_pi_result = pi_main();
+        const int next_pi_result = pi_main();
 
-      pi_result_is_ok = ((next_pi_result == 0) && pi_result_is_ok);
+        pi_result_is_ok = ((next_pi_result == (int) INT8_C(0)) && pi_result_is_ok);
+      }
     }
 
     OS_Schedule();
