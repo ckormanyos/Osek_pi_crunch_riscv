@@ -1,62 +1,42 @@
-OSEK_RISC-V_SiFive_FE310_SoC
+Osek_pi_crunch_riscv
 ==================
 
 <p align="center">
-    <a href="https://github.com/chalandi/OSEK_RISC-V_SiFive_FE310_SoC/actions">
-        <img src="https://github.com/chalandi/OSEK_RISC-V_SiFive_FE310_SoC/actions/workflows/OSEK_RISC-V_SiFive_FE310_SoC.yml/badge.svg" alt="Build Status"></a>
-    <a href="https://github.com/chalandi/OSEK_RISC-V_SiFive_FE310_SoC/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc">
-        <img src="https://custom-icon-badges.herokuapp.com/github/issues-raw/chalandi/OSEK_RISC-V_SiFive_FE310_SoC?logo=github" alt="Issues" /></a>
-    <a href="https://github.com/chalandi/OSEK_RISC-V_SiFive_FE310_SoC">
-        <img src="https://img.shields.io/github/languages/code-size/chalandi/OSEK_RISC-V_SiFive_FE310_SoC" alt="GitHub code size in bytes" /></a>
+    <a href="https://github.com/ckormanyos/Osek_pi_crunch_riscv/actions">
+        <img src="https://github.com/ckormanyos/Osek_pi_crunch_riscv/actions/workflows/Osek_pi_crunch_riscv.yml/badge.svg" alt="Build Status"></a>
 </p>
 
-This repository implements an OSEK-like, bare-metal
-operating system for RISC-V (SiFive RISC-V FE310 SoC).
-The goals are to achieve near-compatibility with OSEK (ECC1/BCC1)
-and to provide an intuitive, easy-to-understand sample application
-that can be extended for your own projects.
+This repository uses an OSEK-like OS on bare-metal RISC-V FE310 to calculate $\pi$
+with a spigot algorithm.
 
-Features include:
-  - OSEK-like OS implementation with support of most common features.
-  - The sample application runs on the SparkFun _Red_ _Thing_ RISC-V FE310 Board.
-  - Tasks and events interact to produce a blinky LED show featuring the blue LED toggling at 1/2 Hz (blue).
-  - Use a simple self-written bare-metal startup.
-  - Power, clock and port initialization.
-  - Implementation in C99 with absolute minimal use of assembly.
+Osek_pi_crunch_cm3 is a fascinating, educational and fun project
+that computes a up to $100,001$ decimal digits of $\pi$
+on a bare-metal ARM(R) Cortex(R)-M3 system.
 
-A clear and easy-to-understand build system based on free GNUmake/GCC.
+The backbone real-time operating system is taken directly
+from the OSEK-like OS implemented in
+[Chalandi/OSEK](https://github.com/Chalandi/OSEK)
 
-This repository provides keen insight on writing your own
-_bare_ _metal_ operating system from scratch on a modern
-microcontroller using entirely free tools and open standards.
+# Software Details
 
-## Details on the Application
+To compute $\pi$, we use a (slow) quadratic pi-spigot algorithm
+of order $N^2$ in this project. The spigot calculation
+(having quadratic order) is slower than other well-known algorithms
+such as AGM or fast series.
 
-Following low-level chip initialization, the program jumps
-to the `main()` subroutine in [main.c](./Code/main.c).
-Here there are two functional lines. The first line initializes the LEDs.
-The second line subsequently starts the operating system via call
-to `OS_StartOS()`.
+The required memory grows linearly with the digit count.
+Approximately 1.4 Mbyte RAM are needed for the full $10^{5}$
+decimal-digit calculation. Since this is significantly more RAM
+than is available on-chip, a slow external serial SPI SRAM is used
+for storage.
 
-An idle task and one single extended task animate the user LED,
-providing a simple blinky LED show featuring the blue
-LED toggling at 1/2 Hz (blue). These straightforward sample
-tasks can be found in [tasks.c](./Code/tasks.c).
+GNU/GCC `riscv64-unknown-elf` is used for target system
+development on `*nix`. The build system is based on
+Standard GNUmake/shell-script.
 
-## Building the Application
+# Prototype Project
 
-### Build with GNUmake on `*nix`
+This repo features a fully-worked-out prototype example project.
+The prototype runs on a RISC-V FE310 controller fitted on the
+SparkFun _Red_ _Thing_ RISC-V FE310 Board. The board is driven in OS-less, bare-metal mode.
 
-Build on `*nix*` is easy using an installed `gcc-arm-none-eabi`
-
-```sh
-cd OSEK_RISC-V_SiFive_FE310_SoC
-./Rebuild.sh
-```
-
-The build results including ELF-file, HEX-mask, MAP-file
-can be found in the `Output` directory following the GNUmake build.
-
-## References
-Further information on open standard OSEK can be found in ISO 17356 and in the link below:
-* https://en.wikipedia.org/wiki/OSEK
