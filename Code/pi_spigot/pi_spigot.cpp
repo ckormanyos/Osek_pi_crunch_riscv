@@ -34,7 +34,6 @@
 
 #include <math/checksums/hash/hash_sha1.h>
 #include <math/pi_spigot/pi_spigot.h>
-#include <mcal_port.h>
 #include <util/utility/util_baselexical_cast.h>
 
 namespace local
@@ -65,11 +64,6 @@ namespace local
 
   auto pi_output_digits10 = static_cast<std::uint32_t>(UINT8_C(0));
 
-  using benchmark_port_type = ::mcal::port::port_pin<std::uint32_t,
-                                                     std::uint32_t,
-                                                     mcal::reg::gpio0_base,
-                                                     static_cast<std::uint32_t>(UINT8_C(19))>;
-
   using pi_spigot_input_container_type = std::array<std::uint32_t, pi_spigot_type::input_static_size>;
 
   pi_spigot_input_container_type pi_spigot_input;
@@ -82,6 +76,8 @@ extern "C"
   auto pi_main() -> int;
 
   auto pi_led_toggle(void) -> void;
+
+  auto mcal_benchmark_toggle(void) -> void;
 }
 
 extern "C"
@@ -90,10 +86,14 @@ auto pi_led_toggle(void) -> void
   ::mcal_led_toggle();
 }
 
+extern "C"
+auto pi_benchmark_toggle(void) -> void
+{
+  ::mcal_benchmark_toggle();
+}
+
 auto pi_main() -> int
 {
-  local::benchmark_port_type::toggle_pin();
-
   local::pi_spigot_instance.calculate(local::pi_spigot_input.data(), nullptr, &local::pi_spigot_hash);
 
   // Check the hash result of the pi calculation.
