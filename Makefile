@@ -197,7 +197,8 @@ SRC_FILES := $(SRC_DIR)/Mcal/mtimer.c                                           
              $(SRC_DIR)/OSEK/OsEvt.c                                                                  \
              $(SRC_DIR)/OSEK/OsSched.c                                                                \
              $(SRC_DIR)/OSEK/OsTask.c                                                                 \
-             $(SRC_DIR)/OSEK/OsTcb.c
+             $(SRC_DIR)/OSEK/OsTcb.c                                                                  \
+             $(SRC_DIR)/pi_spigot/pi_spigot.cpp
 
 ############################################################################################
 # Include Paths

@@ -9,7 +9,7 @@
 #include "FE310.h"
 #include "riscv-csr.h"
 
-//static bool pi_result_is_ok = true;
+bool pi_result_is_ok = true;
 
 void TOGGLE_BLUE_LED(void);
 void TURNON_BLUE_LED(void);
@@ -42,10 +42,10 @@ TASK(T1)
       OS_TerminateTask(); /* In case of error we switch off the task */
     }
 
-    //if(!pi_result_is_ok)
-    //{
-    //  OS_TerminateTask(); /* In case of error we switch off the task */
-    //}
+    if(!pi_result_is_ok)
+    {
+      OS_TerminateTask(); /* In case of error we switch off the task */
+    }
   }
 }
 
@@ -67,19 +67,17 @@ TASK(Idle)
       {
         OS_ClearEvent(EVT_DUMMY_LED);
 
-        #if 0
         extern int pi_main(void);
 
         const int pi_result = pi_main();
 
-        const bool pi_result_is_ok = ((pi_result == 0) || true);
+        pi_result_is_ok = (pi_result == 0);
 
         if(!pi_result_is_ok)
         {
           /* In case of error we switch off the task */
           OS_TerminateTask();
         }
-        #endif
       }
     }
     else
