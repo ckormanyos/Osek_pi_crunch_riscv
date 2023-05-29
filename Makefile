@@ -62,7 +62,7 @@ VERBOSE_GCC = -frecord-gcc-switches -fverbose-asm
 
 ARCH = -mcpu=sifive-e31                                           \
        -mabi=ilp32                                                \
-       -msmall-data-limit=4                                       \
+       -msmall-data-limit=0                                       \
        -falign-functions=4
 
 ############################################################################################
