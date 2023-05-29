@@ -76,10 +76,6 @@ SECTIONS
     . = ALIGN(4);
     *(.rodata*)
     . = ALIGN(4);
-    *(.srodata)
-    . = ALIGN(4);
-    *(.srodata*)
-    . = ALIGN(4);
     *(.glue_7)
     . = ALIGN(4);
     *(.glue_7t)
@@ -117,7 +113,6 @@ SECTIONS
     . = ALIGN(4);
   } > ROM
 
-
   . = __STACK_START_ADDRESS;
 
   /* stack definition */
@@ -140,12 +135,6 @@ SECTIONS
     *(.data*)
     . = ALIGN(4);
     KEEP (*(.data*))
-    *(.sdata)
-    . = ALIGN(4);
-    KEEP (*(.sdata))
-    *(.sdata*)
-    . = ALIGN(4);
-    KEEP (*(.sdata*))
     _data_end = .;
   } > RAM AT > ROM
 
@@ -159,12 +148,6 @@ SECTIONS
     *(.bss*)
     . = ALIGN(4);
     KEEP (*(.bss*))
-    *(.sbss)
-    . = ALIGN(4);
-    KEEP (*(.sbss))
-    *(.sbss*)
-    . = ALIGN(4);
-    KEEP (*(.sbss*))
     _bss_end = .;
   } > RAM
 
