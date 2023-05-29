@@ -57,7 +57,7 @@ TASK(Idle)
 
     const int pi_result = pi_main();
 
-    pi_result_is_ok = (pi_result == 0);
+    pi_result_is_ok = ((pi_result == 0) && pi_result_is_ok);
 
     if(!pi_result_is_ok)
     {
