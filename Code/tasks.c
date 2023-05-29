@@ -51,38 +51,18 @@ TASK(T1)
 
 TASK(Idle)
 {
-  const OsEventMaskType OsWaitEventMask = (OsEventMaskType) EVT_DUMMY_LED;
-
-  (void) OS_SetRelAlarm(ALARM_DUMMY_LED, 0, 503);
-
   for(;;)
   {
-    if(E_OK == OS_WaitEvent(OsWaitEventMask))
+    extern int pi_main(void);
+
+    const int pi_result = pi_main();
+
+    pi_result_is_ok = (pi_result == 0);
+
+    if(!pi_result_is_ok)
     {
-      OsEventMaskType Events = (OsEventMaskType) 0U;
-
-      (void) OS_GetEvent((OsTaskType) Idle, &Events);
-
-      if((Events & EVT_DUMMY_LED) == EVT_DUMMY_LED)
-      {
-        OS_ClearEvent(EVT_DUMMY_LED);
-
-        extern int pi_main(void);
-
-        const int pi_result = pi_main();
-
-        pi_result_is_ok = (pi_result == 0);
-
-        if(!pi_result_is_ok)
-        {
-          /* In case of error we switch off the task */
-          OS_TerminateTask();
-        }
-      }
-    }
-    else
-    {
-      OS_TerminateTask(); // In case of error we switch off the task
+      /* In case of error we switch off the task */
+      OS_TerminateTask();
     }
   }
 }
