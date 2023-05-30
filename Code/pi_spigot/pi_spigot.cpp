@@ -23,6 +23,7 @@
 
 #include <array>
 
+#include <mcal_benchmark.h>
 #include <pi_calc_cfg.h>
 
 #if defined(PI_CRUNCH_METAL_STANDALONE_MAIN)
@@ -67,33 +68,40 @@ namespace local
   using pi_spigot_input_container_type = std::array<std::uint32_t, pi_spigot_type::input_static_size>;
 
   pi_spigot_input_container_type pi_spigot_input;
+
+  auto pi_benchmark_toggle(void) -> void;
 } // namespace local
 
 extern "C"
 {
-  auto mcal_led_toggle(void) -> void;
-
   auto pi_main() -> int;
 
   auto pi_led_toggle(void) -> void;
 
-  auto mcal_benchmark_toggle(void) -> void;
+  auto pi_benchmark_toggle(void) -> void;
 }
 
-extern "C"
-auto pi_led_toggle(void) -> void
+auto local::pi_benchmark_toggle(void) -> void
 {
-  ::mcal_led_toggle();
-}
+  using local_benchmark_port_type = mcal::benchmark::benchmark_port_type;
 
-extern "C"
-auto pi_benchmark_toggle(void) -> void
-{
-  ::mcal_benchmark_toggle();
+  static auto my_benchmark_port_is_init = false;
+
+  if(!my_benchmark_port_is_init)
+  {
+    my_benchmark_port_is_init = true;
+
+    local_benchmark_port_type::set_pin_low();
+    local_benchmark_port_type::set_direction_output();
+  }
+
+  local_benchmark_port_type::toggle_pin();
 }
 
 auto pi_main() -> int
 {
+  local::pi_benchmark_toggle();
+
   local::pi_spigot_instance.calculate(local::pi_spigot_input.data(), nullptr, &local::pi_spigot_hash);
 
   // Check the hash result of the pi calculation.
