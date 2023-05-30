@@ -19,13 +19,6 @@ extern "C"
   {
     mcal::led::led0().toggle();
   }
-
-  void mcal_benchmark_toggle(void);
-
-  void mcal_benchmark_toggle(void)
-  {
-    mcal::led::led1().toggle();
-  }
 }
 
 mcal::led::led_base& mcal::led::led0()
@@ -40,15 +33,4 @@ mcal::led::led_base& mcal::led::led0()
   static led0_led_type local_led0;
 
   return local_led0;
-}
-
-mcal::led::led_base& mcal::led::led1()
-{
-  using led1_port_type = mcal::benchmark::benchmark_port_type;
-
-  using led1_led_type = mcal::led::led_port<led1_port_type>;
-
-  static led1_led_type local_led1;
-
-  return local_led1;
 }
