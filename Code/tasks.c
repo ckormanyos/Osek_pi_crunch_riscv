@@ -12,6 +12,8 @@ static bool pi_result_is_ok = true;
 
 TASK(T1)
 {
+  pi_result_is_ok = true;
+
   extern void mcal_led_toggle(void);
 
   mcal_led_toggle();
@@ -49,6 +51,8 @@ TASK(T1)
 
 TASK(Idle)
 {
+  pi_result_is_ok = true;
+
   for(;;)
   {
     for(unsigned i = (unsigned) UINT8_C(0); i < (unsigned) UINT16_C(1024); ++i)

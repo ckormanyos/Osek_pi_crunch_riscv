@@ -5,7 +5,6 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#include <mcal_benchmark.h>
 #include <mcal_irq.h>
 #include <mcal_led.h>
 #include <mcal_led/mcal_led_port.h>

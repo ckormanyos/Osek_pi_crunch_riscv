@@ -13,6 +13,10 @@
 
 ******************************************************************************************/
 
+#if ((defined(__GNUC__)  && (__GNUC__ > 11)) && defined(__riscv))
+.option arch, +zicsr
+#endif
+
 .file "OsAsm.s"
 
 .equ OS_CPU_CONTEXT_USED_REGISTERS, 31

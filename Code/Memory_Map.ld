@@ -30,10 +30,10 @@ __FLASH_START_ADDRESS = 0x20000000;
 __FLASH_SIZE          = 64K;
 
 __STACK_START_ADDRESS = 0x80000000;
-__STACK_SIZE = 1K;
+__STACK_SIZE = 1K - 8;
 
-__RAM_START_ADDRESS = 0x80000000 + __STACK_SIZE;
-__RAM_SIZE =  16K - __STACK_SIZE;
+__RAM_START_ADDRESS = 0x80000000 + __STACK_SIZE + 8;
+__RAM_SIZE =  16K - __STACK_SIZE - 8;
 
 /******************************************************************************************
  Memory configuration
@@ -61,7 +61,6 @@ SECTIONS
   /* Program code (text) */
   .text : ALIGN(0x100)
   {
-    PROVIDE(__CODE_BASE_ADDRESS = .);
     _ctors_begin = .;
     KEEP(*(SORT(.init_array.*)))
     KEEP(*(.init_array*))

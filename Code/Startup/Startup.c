@@ -10,35 +10,6 @@
 // Description : C/C++ Runtime Setup (Crt0)
 // 
 // ***************************************************************************************
-//=========================================================================================
-// Types definitions
-//=========================================================================================
-typedef struct
-{
-  unsigned long  sourceAddr;  /* Source Address (section in ROM memory) */
-  unsigned long  targetAddr;  /* Target Address (section in RAM memory) */
-  unsigned long  size;        /* length of section (bytes)              */
-} runtimeCopyTable_t;
-
-typedef struct
-{
-  unsigned long  addr;  /* Source Address (section in RAM memory) */
-  unsigned long  size;  /* Length of section (bytes)              */
-} runtimeClearTable_t;
-
-//=========================================================================================
-// Linker variables
-//=========================================================================================
-extern const runtimeCopyTable_t __RUNTIME_COPY_TABLE[];
-extern const runtimeClearTable_t __RUNTIME_CLEAR_TABLE[];
-extern unsigned long __CTOR_LIST__[];
-
-//=========================================================================================
-// Defines
-//=========================================================================================
-#define __STARTUP_RUNTIME_COPYTABLE   (runtimeCopyTable_t*)(&__RUNTIME_COPY_TABLE[0])
-#define __STARTUP_RUNTIME_CLEARTABLE  (runtimeClearTable_t*)(&__RUNTIME_CLEAR_TABLE[0])
-#define __STARTUP_RUNTIME_CTORS       (unsigned long*)(&__CTOR_LIST__[0])
 
 //=========================================================================================
 // Function prototype
@@ -51,7 +22,8 @@ static void Startup_Unexpected_Exit(void);
 //=========================================================================================
 // Extern function prototype
 //=========================================================================================
-int main(void) __attribute__((weak));
+extern int main(void) __attribute__((weak));
+
 void FE310_HwInitialization(void) __attribute__((weak));
 
 //-----------------------------------------------------------------------------------------
