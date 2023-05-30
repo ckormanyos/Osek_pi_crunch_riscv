@@ -20,7 +20,9 @@ PRJ_NAME   = Osek_pi_crunch_riscv
 OUTPUT_DIR = $(CURDIR)/Output
 OBJ_DIR    = $(OUTPUT_DIR)/Obj
 SRC_DIR    = $(CURDIR)/Code
-LD_SCRIPT  = $(SRC_DIR)/Memory_Map.ld
+
+CC_ERR_FORMAT_SCRIPT = CompilerErrorFormater.py
+LD_SCRIPT            = $(SRC_DIR)/Memory_Map.ld
 
 ############################################################################################
 # Toolchain
@@ -31,7 +33,9 @@ TOOLCHAIN = riscv64-unknown-elf
 AS        = $(TOOLCHAIN)-g++
 CC        = $(TOOLCHAIN)-g++
 CPP       = $(TOOLCHAIN)-g++
+CPPFILT   = $(TOOLCHAIN)-c++filt
 LD        = $(TOOLCHAIN)-g++
+NM        = $(TOOLCHAIN)-nm
 OBJDUMP   = $(TOOLCHAIN)-objdump
 OBJCOPY   = $(TOOLCHAIN)-objcopy
 READELF   = $(TOOLCHAIN)-readelf
@@ -39,7 +43,7 @@ READELF   = $(TOOLCHAIN)-readelf
 PYTHON = python3
 
 ############################################################################################
-# Optimization Compiler flags
+# C Compiler flags
 ############################################################################################
 
 OPT_MODIFIED_O2 = -O2                                             \
@@ -50,126 +54,74 @@ NO_OPT = -O0
 
 OPT = $(OPT_MODIFIED_O2)
 
-############################################################################################
-# GCC Compiler verbose flags
-############################################################################################
+OPS_BASE     = -Wall                                          \
+               -Wextra                                        \
+               -Wpedantic                                     \
+               -Wconversion                                   \
+               -Wsign-conversion                              \
+               -Wshadow                                       \
+               -mcpu=sifive-e31                               \
+               -mabi=ilp32                                    \
+               -msmall-data-limit=0                           \
+               -falign-functions=4                            \
+               -ffast-math                                    \
+               -fomit-frame-pointer                           \
+               -fno-exceptions                                \
+               -Wa,-adhln=$(OBJ_DIR)/$(basename $(@F)).lst    \
+               -g3                                            \
+               -gdwarf-2
 
-VERBOSE_GCC = -frecord-gcc-switches -fverbose-asm
-
-############################################################################################
-# Target's Compiler flags
-############################################################################################
-
-ARCH = -mcpu=sifive-e31                                           \
-       -mabi=ilp32                                                \
-       -msmall-data-limit=0                                       \
-       -falign-functions=4
-
-############################################################################################
-# Target's Compiler warning flags
-############################################################################################
-
-WFLAGS = -Wall                                                    \
-         -Wextra                                                  \
-         -Wpedantic                                               \
-         -Wconversion                                             \
-         -Wsign-conversion
-
-############################################################################################
-# C Compiler flags
-############################################################################################
-
-COPS  = $(OPT)                                                    \
-        $(ARCH)                                                   \
-        $(WFLAGS)                                                 \
-        -ffast-math                                               \
-        -Wa,-adhln=$(OBJ_DIR)/$(basename $(@F)).lst               \
-        -g3                                                       \
-        -x c                                                      \
-        -std=c99                                                  \
-        -Wall                                                     \
-        -Wextra                                                   \
-        -fomit-frame-pointer                                      \
-        -gdwarf-2                                                 \
-        -fno-exceptions
+COPS         = -x c                                           \
+               -std=c99                                       \
+               $(OPT)                                         \
+               $(OPS_BASE)                                    \
+               -fno-inline-functions
 
 ############################################################################################
 # C++ Compiler flags
 ############################################################################################
 
-CPPOPS  = $(OPT)                                                  \
-          $(ARCH)                                                 \
-          $(WFLAGS)                                               \
-          -ffast-math                                             \
-          -Wa,-adhln=$(OBJ_DIR)/$(basename $(@F)).lst             \
-          -g3                                                     \
-          -Wall                                                   \
-          -Wextra                                                 \
-          -fomit-frame-pointer                                    \
-          -gdwarf-2                                               \
-          -fno-exceptions                                         \
-          -x c++                                                  \
-          -fno-rtti                                               \
-          -fno-use-cxa-atexit                                     \
-          -fno-nonansi-builtins                                   \
-          -fno-threadsafe-statics                                 \
-          -fno-enforce-eh-specs                                   \
-          -ftemplate-depth=128                                    \
-          -Wzero-as-null-pointer-constant
+CPPOPS       = -x c++                                         \
+               $(OPT)                                         \
+               $(OPS_BASE)                                    \
+               -std=c++14                                     \
+               -fno-rtti                                      \
+               -fno-use-cxa-atexit                            \
+               -fno-nonansi-builtins                          \
+               -fno-threadsafe-statics                        \
+               -finline-functions                             \
+               -finline-limit=32                              \
+               -fno-enforce-eh-specs                          \
+               -ftemplate-depth=128                           \
+               -Wzero-as-null-pointer-constant
 
 ############################################################################################
 # Assembler flags
 ############################################################################################
 
 ifeq ($(AS), $(TOOLCHAIN)-as)
-ASOPS =  -march=rv32imac                                         \
-         -alh 
+ASOPS        =  -march=rv32imac                                         \
+         -      alh 
 else
-ASOPS = $(OPT)                                                   \
-        $(ARCH)                                                  \
-        -ffast-math                                              \
-        -Wa,-adhln=$(OBJ_DIR)/$(basename $(@F)).lst              \
-        -g3                                                      \
-        -Wall                                                    \
-        -Wextra                                                  \
-        -fomit-frame-pointer                                     \
-        -gdwarf-2                                                \
-        -fno-exceptions                                          \
-        -x assembler                                             \
-        -fno-rtti                                                \
-        -fno-use-cxa-atexit                                      \
-        -fno-nonansi-builtins                                    \
-        -fno-threadsafe-statics                                  \
-        -fno-enforce-eh-specs                                    \
-        -ftemplate-depth=128                                     \
-        -Wzero-as-null-pointer-constant
+ASOPS        = -x assembler                                   \
+               $(OPS_BASE)
 endif
 
 ############################################################################################
 # Linker flags
 ############################################################################################
 
-ifeq ($(LD), $(TOOLCHAIN)-ld)
-  LOPS = -nostartfiles                                          \
-         -nostdlib                                              \
-         -e _start                                              \
-         --print-memory-usage                                   \
-         --print-map                                            \
-         -dT $(LD_SCRIPT)                                       \
-         -Map=$(OUTPUT_DIR)/$(PRJ_NAME).map
+LOPS         = -x none                                              \
+               -nostartfiles                                        \
+               -nostdlib                                            \
+               -specs=nano.specs                                    \
+               -specs=nosys.specs                                   \
+               -e Startup_Init                                      \
+               $(OPS_BASE)                                          \
+               -Wl,--print-memory-usage                             \
+               -Wl,-Map,$(OUTPUT_DIR)/$(PRJ_NAME).map               \
+               -T $(LD_SCRIPT)
 
-else
-  LOPS = -nostartfiles                                          \
-         -e Startup_Init                                        \
-         $(ARCH)                                                \
-         -ffast-math                                            \
-         -Wl,--print-memory-usage                               \
-         -Wl,--print-map                                        \
-         -Wl,-dT $(LD_SCRIPT)                                   \
-         -Wl,-Map=$(OUTPUT_DIR)/$(PRJ_NAME).map                 \
-         --specs=nano.specs                                     \
-         --specs=nosys.specs
-endif
 
 ############################################################################################
 # Source Files
@@ -204,11 +156,11 @@ SRC_FILES := $(SRC_DIR)/Mcal/mtimer.c                                           
 ############################################################################################
 # Include Paths
 ############################################################################################
-INC_FILES := $(SRC_DIR)/OSEK/HwPlatform/RISC-V                \
-             $(SRC_DIR)/OSEK                                  \
-             $(SRC_DIR)/Mcal                                  \
-             $(SRC_DIR)/ref_app/src                           \
-             $(SRC_DIR)/ref_app/src/mcal/riscvfe310           \
+INC_FILES := $(SRC_DIR)/OSEK/HwPlatform/RISC-V                                                        \
+             $(SRC_DIR)/OSEK                                                                          \
+             $(SRC_DIR)/Mcal                                                                          \
+             $(SRC_DIR)/ref_app/src                                                                   \
+             $(SRC_DIR)/ref_app/src/mcal/riscvfe310                                                   \
              $(SRC_DIR)
 
 ############################################################################################
@@ -224,63 +176,39 @@ ifeq ($(MAKECMDGOALS),build)
 -include $(subst .o,.d,$(FILES_O))
 endif
 
-build : $(OUTPUT_DIR)/$(PRJ_NAME).elf
+all : clean $(OUTPUT_DIR)/$(PRJ_NAME).elf
 
-all : $(OUTPUT_DIR)/$(PRJ_NAME).elf
 
 .PHONY : clean
 clean :
-	@-rm -rf $(OUTPUT_DIR)  2>/dev/null || true
+	@-rm -f $(OBJ_DIR)/*.o            2>/dev/null || true
+	@-rm -f $(OBJ_DIR)/*.err          2>/dev/null || true
+	@-rm -rf $(OUTPUT_DIR)            2>/dev/null || true
 	@-mkdir -p $(subst \,/,$(OBJ_DIR))
-
+	@-mkdir -p $(subst \,/,$(OUTPUT_DIR))
 
 $(OBJ_DIR)/%.o : %.c
 	@-echo +++ compile: $(subst \,/,$<) to $(subst \,/,$@)
 	@-$(CC) $(COPS) $(addprefix -I, $(INC_FILES)) -c $< -o $(OBJ_DIR)/$(basename $(@F)).o 2> $(OBJ_DIR)/$(basename $(@F)).err
-	@-$(PYTHON) CompilerErrorFormater.py $(OBJ_DIR)/$(basename $(@F)).err -COLOR
+	@-$(PYTHON) $(CC_ERR_FORMAT_SCRIPT) $(OBJ_DIR)/$(basename $(@F)).err -COLOR
 
-
-ifeq ($(AS), $(TOOLCHAIN)-as)
 $(OBJ_DIR)/%.o : %.s
 	@-echo +++ compile: $(subst \,/,$<) to $(subst \,/,$@)
-	@$(AS) $(ASOPS) $< -o $(OBJ_DIR)/$(basename $(@F)).o 2> $(OBJ_DIR)/$(basename $(@F)).err >$(OBJ_DIR)/$(basename $(@F)).lst
-	@-$(PYTHON) CompilerErrorFormater.py $(OBJ_DIR)/$(basename $(@F)).err -COLOR
-
-$(OBJ_DIR)/%.o : %.asm
-	@-echo +++ compile: $(subst \,/,$<) to $(subst \,/,$@)
-	@$(CC) -E -P $(addprefix -I, $(INC_FILES)) -x c $< > $(OBJ_DIR)/$(basename $(@F)).asm.pre
-	@$(AS) $(ASOPS) $(OBJ_DIR)/$(basename $(@F)).asm.pre -o $(OBJ_DIR)/$(basename $(@F)).o 2> $(OBJ_DIR)/$(basename $(@F)).err >$(OBJ_DIR)/$(basename $(@F)).lst
-	@-$(PYTHON) CompilerErrorFormater.py $(OBJ_DIR)/$(basename $(@F)).err -COLOR
-else
-$(OBJ_DIR)/%.o : %.s
-	@-echo +++ compile: $(subst \,/,$<) to $(subst \,/,$@)
-	@-$(CC) $(ASOPS) $(addprefix -I, $(INC_FILES)) -c $< -o $(OBJ_DIR)/$(basename $(@F)).o 2> $(OBJ_DIR)/$(basename $(@F)).err
-	@-$(PYTHON) CompilerErrorFormater.py $(OBJ_DIR)/$(basename $(@F)).err -COLOR
+	@$(AS) $(ASOPS) -c $< -o $(OBJ_DIR)/$(basename $(@F)).o 2> $(OBJ_DIR)/$(basename $(@F)).err >$(OBJ_DIR)/$(basename $(@F)).lst
+	@-$(PYTHON) $(CC_ERR_FORMAT_SCRIPT) $(OBJ_DIR)/$(basename $(@F)).err -COLOR
 
 $(OBJ_DIR)/%.o : %.asm
 	@-echo +++ compile: $(subst \,/,$<) to $(subst \,/,$@)
 	@$(CC) -E -P $(addprefix -I, $(INC_FILES)) -x c $< > $(OBJ_DIR)/$(basename $(@F)).asm.pre
 	@-$(CC) $(ASOPS) $(addprefix -I, $(INC_FILES)) -c $(OBJ_DIR)/$(basename $(@F)).asm.pre -o $(OBJ_DIR)/$(basename $(@F)).o 2> $(OBJ_DIR)/$(basename $(@F)).err
-	@-$(PYTHON) CompilerErrorFormater.py $(OBJ_DIR)/$(basename $(@F)).err -COLOR
-endif
-
+	@-$(PYTHON) $(CC_ERR_FORMAT_SCRIPT) $(OBJ_DIR)/$(basename $(@F)).err -COLOR
 
 $(OBJ_DIR)/%.o : %.cpp
-	@-echo +++ compile : $(subst \,/,$<) to $(subst \,/,$@)
+	@-echo +++ compile: $(subst \,/,$<) to $(subst \,/,$@)
 	@$(CPP) $(CPPOPS) $(addprefix -I, $(INC_FILES)) -c $< -o $(OBJ_DIR)/$(basename $(@F)).o 2> $(OBJ_DIR)/$(basename $(@F)).err
-	@-$(PYTHON) CompilerErrorFormater.py $(OBJ_DIR)/$(basename $(@F)).err -COLOR
-
+	@-$(PYTHON) $(CC_ERR_FORMAT_SCRIPT) $(OBJ_DIR)/$(basename $(@F)).err -COLOR
 
 $(OUTPUT_DIR)/$(PRJ_NAME).elf : $(FILES_O) $(LD_SCRIPT)
-	@-echo +++ link : $(subst \,/,$@)
 	@$(LD) $(LOPS) $(FILES_O) -o $(OUTPUT_DIR)/$(PRJ_NAME).elf
-	@-echo +++ generate : $(OUTPUT_DIR)/$(PRJ_NAME).list.text
-	@$(OBJDUMP) -d --visualize-jumps --wide $(OUTPUT_DIR)/$(PRJ_NAME).elf > $(OUTPUT_DIR)/$(PRJ_NAME).list.text
-	@-echo +++ generate : $(OUTPUT_DIR)/$(PRJ_NAME).list.all
-	@$(OBJDUMP) -D --visualize-jumps --wide $(OUTPUT_DIR)/$(PRJ_NAME).elf > $(OUTPUT_DIR)/$(PRJ_NAME).list.all
-	@-echo +++ generate : $(OUTPUT_DIR)/$(PRJ_NAME).list.text.pure
-	@$(OBJDUMP) -d --visualize-jumps --wide --disassembler-options=numeric,no-aliases $(OUTPUT_DIR)/$(PRJ_NAME).elf > $(OUTPUT_DIR)/$(PRJ_NAME).list.text.pure
-	@-echo +++ generate : $(OUTPUT_DIR)/$(PRJ_NAME).hex
 	@$(OBJCOPY) $(OUTPUT_DIR)/$(PRJ_NAME).elf -O ihex $(OUTPUT_DIR)/$(PRJ_NAME).hex
-	@-echo +++ generate : $(OUTPUT_DIR)/$(PRJ_NAME).readelf
-	@$(READELF) --wide -S -s $(OUTPUT_DIR)/$(PRJ_NAME).elf > $(OUTPUT_DIR)/$(PRJ_NAME).readelf
+	@$(NM) --numeric-sort --print-size $(OUTPUT_DIR)/$(PRJ_NAME).elf | $(CPPFILT) > $(OUTPUT_DIR)/$(PRJ_NAME)_cppfilt.txt
