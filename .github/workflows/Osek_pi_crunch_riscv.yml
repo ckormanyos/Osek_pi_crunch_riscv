@@ -16,10 +16,10 @@ jobs:
           fetch-depth: '0'
       - name: update-tools
         run: |
-          wget --no-check-certificate https://static.dev.sifive.com/dev-tools/freedom-tools/v2020.12/riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14.tar.gz
-          tar -xvzf riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14.tar.gz
+          wget --no-check-certificate https://buildbot.embecosm.com/job/riscv32-gcc-ubuntu2004/169/artifact/riscv32-embecosm-gcc-ubuntu2004-20230507.tar.gz
+          tar -xvzf riscv32-embecosm-gcc-ubuntu2004-20230507.tar.gz
       - name: target-riscv64-unknown-elf
         run: |
-          PATH=./riscv64-unknown-elf-toolchain-10.2.0-2020.12.8-x86_64-linux-ubuntu14/bin:$PATH
+          PATH=./riscv32-embecosm-gcc-ubuntu2004-20230507/bin:$PATH
           bash ./Build.sh
           ls -la ./Output/Osek_pi_crunch_riscv.hex

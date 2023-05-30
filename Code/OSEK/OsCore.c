@@ -15,6 +15,11 @@
 // 
 // *****************************************************************************************************************
 
+#if ((defined(__GNUC__)  && (__GNUC__ > 11)) && defined(__riscv))
+__asm__ (".option arch, +zicsr");
+__asm__ (".option arch, +zifencei");
+#endif
+
 #pragma GCC push_options
 #pragma GCC optimize ("O0")
 

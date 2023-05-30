@@ -6,6 +6,10 @@
 
 */
 
+#if ((defined(__GNUC__)  && (__GNUC__ > 11)) && defined(__riscv))
+__asm__ (".option arch, +zicsr");
+#endif
+
 #ifndef RISCV_CSR_H
 #define RISCV_CSR_H
 
@@ -26,7 +30,9 @@ typedef uint64_t uint_csr64_t;
 // Test for Zicsr extension, if relevant
 #if defined(__riscv_arch_test)
 #if !defined(__riscv_zicsr)
-#error "-march must include zicsr to access CSRs" 
+
+// Error is disabled
+
 #endif
 #endif
 

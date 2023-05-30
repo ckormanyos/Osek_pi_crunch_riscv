@@ -1,4 +1,8 @@
 
+#if ((defined(__GNUC__)  && (__GNUC__ > 11)) && defined(__riscv))
+.option arch, +zicsr
+#endif
+
 #define OS_ASM_SECTION(name)         .section name
 #define OS_ASM_ALIGN(alignment)      .align alignment
 #define OS_ASM_GLOBL(name)           .globl  name

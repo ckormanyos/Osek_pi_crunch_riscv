@@ -15,6 +15,11 @@
 // 
 // *****************************************************************************************************************
 
+#if ((defined(__GNUC__)  && (__GNUC__ > 11)) && defined(__riscv))
+__asm__ (".option arch, +zicsr");
+__asm__ (".option arch, +zifencei");
+#endif
+
 #pragma GCC push_options
 #pragma GCC optimize ("O0")
 
@@ -28,6 +33,7 @@
 //=============================================================================
 volatile OsSchedPrioType OsHwSchedPrioReg;
 const uint32 OsSchedPrioTypeSize = sizeof(OsSchedPrioType);
+const uint32 OsNoReadyTaskIsFound = (uint32) 0xA0A0F5F5UL;
 
 //-----------------------------------------------------------------------------
 /// \brief  

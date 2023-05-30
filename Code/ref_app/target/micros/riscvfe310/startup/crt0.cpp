@@ -20,10 +20,10 @@ extern "C"
 
 void Startup_Init(void)
 {
+  ::Startup_InitMcuSystem();
+
   crt::init_ram();
   crt::init_ctors();
-
-  ::Startup_InitMcuSystem();
 
   ::Startup_RunApplication();
 }
