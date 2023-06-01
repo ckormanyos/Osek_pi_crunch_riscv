@@ -12,8 +12,6 @@ static bool pi_result_is_ok = true;
 
 TASK(T1)
 {
-  pi_result_is_ok = true;
-
   extern void mcal_led_toggle(void);
 
   mcal_led_toggle();
@@ -51,20 +49,17 @@ TASK(T1)
 
 TASK(Idle)
 {
-  pi_result_is_ok = true;
-
   for(;;)
   {
-    for(unsigned i = (unsigned) UINT8_C(0); i < (unsigned) UINT16_C(1024); ++i)
-    {
-      extern int pi_main(void);
+    extern void mcal_benchmark_toggle(void);
 
-      const int next_pi_result = pi_main();
+    mcal_benchmark_toggle();
 
-      pi_result_is_ok = ((next_pi_result == (int) INT8_C(0)) && pi_result_is_ok);
-    }
+    extern int pi_main(void);
 
-    (void) OS_Schedule();
+    const int next_pi_result = pi_main();
+
+    pi_result_is_ok = ((next_pi_result == (int) INT8_C(0)) && pi_result_is_ok);
 
     if(!pi_result_is_ok)
     {

@@ -47,12 +47,11 @@ PYTHON    = python3
 # C Compiler flags
 ############################################################################################
 
-OPT_MODIFIED = -O2                                                   \
-               -fno-reorder-blocks-and-partition                     \
-               -fno-reorder-functions
+OPT_MODIFIED := -O2                                                   \
+                -fno-reorder-blocks-and-partition                     \
+                -fno-reorder-functions
 
-NO_OPT       = -O0                                                   \
-               -fno-inline-functions
+NO_OPT       = -O0
 
 MY_OPT      := $(OPT_MODIFIED)
 
@@ -76,7 +75,9 @@ OPS_BASE     = -Wall                                                \
 COPS         = -x c                                                 \
                -std=c99                                             \
                $(MY_OPT)                                            \
-               $(OPS_BASE)
+               $(OPS_BASE)                                          \
+               -fno-inline-functions
+
 
 ############################################################################################
 # C++ Compiler flags
@@ -91,6 +92,9 @@ CPPOPS       = -x c++                                               \
                -fno-nonansi-builtins                                \
                -fno-threadsafe-statics                              \
                -fno-enforce-eh-specs                                \
+               -finline-functions                                   \
+               -finline-limit=64                                    \
+               -ftemplate-depth=128                                 \
                -Wzero-as-null-pointer-constant
 
 ############################################################################################
