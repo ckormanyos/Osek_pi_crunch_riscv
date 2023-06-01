@@ -35,28 +35,19 @@
       public:
         static void set_direction_output()
         {
-          mcal::irq::disable_all();
-          csr_clr_bits_mip(static_cast<std::uint32_t>(UINT32_C(0xFFFFFFFF)));
           mcal::reg::reg_access_static<addr_type, reg_type, output_en, bpos>::bit_set();
-          mcal::irq::enable_all();
         }
 
         static void set_direction_input() { }
 
         static void set_pin_high()
         {
-          mcal::irq::disable_all();
-          csr_clr_bits_mip(static_cast<std::uint32_t>(UINT32_C(0xFFFFFFFF)));
           mcal::reg::reg_access_static<addr_type, reg_type, output_val, bpos>::bit_set();
-          mcal::irq::enable_all();
         }
 
         static void set_pin_low()
         {
-          mcal::irq::disable_all();
-          csr_clr_bits_mip(static_cast<std::uint32_t>(UINT32_C(0xFFFFFFFF)));
           mcal::reg::reg_access_static<addr_type, reg_type, output_val, bpos>::bit_clr();
-          mcal::irq::enable_all();
         }
 
         static bool read_input_value()
@@ -66,10 +57,7 @@
 
         static void toggle_pin()
         {
-          mcal::irq::disable_all();
-          csr_clr_bits_mip(static_cast<std::uint32_t>(UINT32_C(0xFFFFFFFF)));
           mcal::reg::reg_access_static<addr_type, reg_type, output_val, bpos>::bit_not();
-          mcal::irq::enable_all();
         }
       };
     }

@@ -85,8 +85,7 @@ SECTIONS
   .vivt : ALIGN(64)
   {
     PROVIDE(__VIVT_BASE_ADDRESS = .);
-    *(*vivt*)
-    . = ALIGN(4);
+    *(.vivt*)
   } > ROM
 
   .riscv.extab :
