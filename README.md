@@ -9,7 +9,7 @@ Osek_pi_crunch_riscv
 This repository uses an OSEK-like OS on bare-metal RISC-V FE310 to calculate $\pi$
 with a spigot algorithm.
 
-Osek_pi_crunch_cm3 is a fascinating, educational and fun project
+Osek_pi_crunch_riscv is a fascinating, educational and fun project
 that computes a up to $100,001$ decimal digits of $\pi$
 on a bare-metal RISC-V FE310 system.
 
@@ -38,16 +38,16 @@ Standard GNUmake/shell-script.
 
 This repo features a fully-worked-out prototype example project.
 The prototype runs on a RISC-V FE310 controller fitted on the
-SparkFun _Red_ _Thing_ RISC-V FE310 Board. The board is driven in OS-less, bare-metal mode.
+SparkFun _Red_ _Thing_ RISC-V FE310 Board.
+The board is driven in OS-less, bare-metal mode.
 
 The $\pi$-spigot calculation runs continuously and successively
 in the low-priority idle task (`Idle`). Upon successful calculation completion,
-pin `port0.19` is toggled. This provides a measure of success viewable
-with a digital oscilloscope.
+the pin on `port0.19` is toggled.
 
 Simultaneously task `T1` exercises a perpetual, simple blinky show
 featuring the user LED (blue) toggling at 1/2 Hz.
-This provides clear visual indication of both system-OK as well as
+This provides clear visual measure of both system-OK as well as
 numerical correctness of the most-recently finished spigot calculation.
 
 # Hardware Setup
