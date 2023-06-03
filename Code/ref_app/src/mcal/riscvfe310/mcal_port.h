@@ -35,10 +35,15 @@
       public:
         static void set_direction_output()
         {
+          mcal::reg::reg_access_static<addr_type, reg_type, input_en,  bpos>::bit_clr();
           mcal::reg::reg_access_static<addr_type, reg_type, output_en, bpos>::bit_set();
         }
 
-        static void set_direction_input() { }
+        static void set_direction_input()
+        {
+          mcal::reg::reg_access_static<addr_type, reg_type, output_en, bpos>::bit_clr();
+          mcal::reg::reg_access_static<addr_type, reg_type, input_en,  bpos>::bit_set();
+        }
 
         static void set_pin_high()
         {
@@ -52,7 +57,7 @@
 
         static bool read_input_value()
         {
-          return false;
+          return mcal::reg::reg_access_static<addr_type, reg_type, input_val, bpos>::bit_get();
         }
 
         static void toggle_pin()

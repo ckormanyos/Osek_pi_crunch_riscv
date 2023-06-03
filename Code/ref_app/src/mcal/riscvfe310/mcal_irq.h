@@ -8,18 +8,25 @@
 #ifndef MCAL_IRQ_2010_04_10_H
   #define MCAL_IRQ_2010_04_10_H
 
-  #include <cstdint>
-
   #include "riscv-csr.h"
 
   namespace mcal
   {
     namespace irq
     {
-      extern std::uint32_t saved_int_state;
+      extern ::uint_xlen_t saved_int_state;
 
-      inline void enable_all () { ::csr_write_mstatus(saved_int_state); }
-      inline void disable_all() { saved_int_state = ::csr_read_clr_bits_mstatus(MSTATUS_MIE_BIT_MASK); }
+      inline void enable_all()
+      {
+        ::csr_write_mstatus(saved_int_state);
+      }
+
+      inline void disable_all()
+      {
+        const auto state = ::csr_read_clr_bits_mstatus(MSTATUS_MIE_BIT_MASK);
+
+        saved_int_state = state;
+      }
     }
   }
 
