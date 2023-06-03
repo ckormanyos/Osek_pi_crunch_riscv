@@ -40,3 +40,18 @@ This repo features a fully-worked-out prototype example project.
 The prototype runs on a RISC-V FE310 controller fitted on the
 SparkFun _Red_ _Thing_ RISC-V FE310 Board. The board is driven in OS-less, bare-metal mode.
 
+The $\pi$-spigot calculation runs continuously and successively
+in the low-priority idle task (`Idle`). Upon successful calculation completion,
+pin `port0.19` is toggled. This provides a measure of success viewable
+with a digital oscilloscope.
+
+Simultaneously task `T1` exercises a perpetual, simple blinky show
+featuring the the user LED (blue) toggling at 1/2 Hz.
+This provides clear visual indication of both system-OK as well as
+numerical correctness of the most-recently finished spigot calculation.
+
+# Hardware Setup
+
+The hardware setup is pictured in the image below.
+
+![](./images/Osek_pi_crunch_riscv.jpg)
