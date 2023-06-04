@@ -30,9 +30,35 @@ decimal-digit calculation. Since this is significantly more RAM
 than is available on-chip, a slow external serial SPI SRAM is used
 for storage.
 
-GNU/GCC `riscv64-unknown-elf` is used for target system
+GNU/GCC `riscv32-unknown-elf` is used for target system
 development on `*nix`. The build system is based on
 Standard GNUmake/shell-script.
+
+## Building the Application
+
+### Build with GNUmake on `*nix`
+
+Build on `*nix*` is easy using an installed `gcc-arm-none-eabi`
+
+```sh
+cd Osek_pi_crunch_riscv
+./Build.sh
+```
+
+The build results including ELF-file, HEX-mask, MAP-file
+can be found in the `Output` directory following the GNUmake build.
+
+If `riscv32-unknown-elf` is not present, then it can be obtained (if needed)
+with `wget`, e.g. from
+[Embecosm](https://www.embecosm.com/resources/tool-chain-downloads/#riscv-stable).
+When doing this, remember also to add the directory of the extracted toolchain locally
+to `PATH` for the build.
+
+```sh
+wget --no-check-certificate https://buildbot.embecosm.com/job/riscv32-gcc-ubuntu2004/169/artifact/riscv32-embecosm-gcc-ubuntu2004-20230507.tar.gz
+tar -xvzf riscv32-embecosm-gcc-ubuntu2004-20230507.tar.gz
+PATH=./riscv32-embecosm-gcc-ubuntu2004-20230507/bin:$PATH
+```
 
 # Prototype Project
 

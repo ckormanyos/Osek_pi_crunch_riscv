@@ -93,7 +93,7 @@ CPPOPS       = -x c++                                               \
                -fno-threadsafe-statics                              \
                -fno-enforce-eh-specs                                \
                -finline-functions                                   \
-               -finline-limit=64                                    \
+               -finline-limit=32                                    \
                -ftemplate-depth=128                                 \
                -Wzero-as-null-pointer-constant
 
