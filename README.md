@@ -80,13 +80,18 @@ numerical correctness of the most-recently finished spigot calculation.
 
 The hardware setup is pictured in the image below.
 
-The blinky LED-toggle show is carried out with a self-fitted LED.
+The blinky LED-toggle show is carried out with a self-fitted LED
+on `port0.0`.
 
-In particular, the on-board, blue user-LED found default-fitted
-on `port0.5` is needed for the SPI serial-clock signal (SCK).
+Consider, in particular, the on-board, blue user-LED found default-fitted
+on `port0.5`. As is usual for Arduino-compatible pinouts,
+this port pin is needed for the SPI serial-clock signal (SCK).
+But this should be routed to the SCK signal of the external SRAM.
+So the blue LED on `port0.5` cannot be used for the blinky show on the user-LED.
+
 For this reason, a self-fitted, $7{mA}$, green LED
 with a $470{\Omega}$ current-limiting resistor has been
-placed on the breadboard and used for blinky toggling
-on `port0.0`.
+placed on the breadboard on `port0.0`. This self-fitted,
+green LED on `port0.0` is used for the blinky show.
 
 ![](./images/Osek_pi_crunch_riscv.jpg)
