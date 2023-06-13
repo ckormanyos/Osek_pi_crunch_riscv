@@ -31,6 +31,10 @@
 //-----------------------------------------------------------------------------------------
 int main(void)
 {
+  extern void mcal_init(void);
+
+  mcal_init();
+
   OS_StartOS(APP_MODE_DEFAULT);
 
   return(0);

@@ -5,17 +5,11 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef MCAL_LED_2022_12_16_H
-  #define MCAL_LED_2022_12_16_H
+#include <mcal_benchmark.h>
+#include <mcal_port.h>
+#include <mcal_reg.h>
 
-  #include <mcal_led/mcal_led_base.h>
-
-  namespace mcal
-  {
-    namespace led
-    {
-      led_base& led0();
-    }
-  }
-
-#endif // MCAL_LED_2022_12_16_H
+void mcal::port::init(const config_type*)
+{
+  benchmark::benchmark_port_type::set_direction_output();
+}
