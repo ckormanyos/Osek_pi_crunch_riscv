@@ -82,9 +82,11 @@ The hardware setup is pictured in the image below.
 
 The blinky LED-toggle show is carried out with a self-fitted LED.
 
-In particular, the on-board blue user-LED found default-fitted
+In particular, the on-board, blue user-LED found default-fitted
 on `port0.5` is needed for the SPI serial-clock signal (SCK).
-For this reason, a secondary, self-fitted LED is placed on the breadboard
-with a $470\Ohm$ current-limiting resistor and used for blinky toggling.
+For this reason, a self-fitted, $7{mA}$, green LED
+with a $470{\Omega}$ current-limiting resistor has been
+placed on the breadboard and used for blinky toggling
+on `port0.0`.
 
 ![](./images/Osek_pi_crunch_riscv.jpg)
