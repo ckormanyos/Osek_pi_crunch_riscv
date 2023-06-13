@@ -72,12 +72,19 @@ in the low-priority idle task (`Idle`). Upon successful calculation completion,
 the pin on `port0.19` is toggled.
 
 Simultaneously task `T1` exercises a perpetual, simple blinky show
-featuring the user LED (blue) toggling at 1/2 Hz.
+featuring a self-fitted LED on `port0.0` toggling at 1/2 Hz.
 This provides clear visual measure of both system-OK as well as
 numerical correctness of the most-recently finished spigot calculation.
 
 # Hardware Setup
 
 The hardware setup is pictured in the image below.
+
+The blinky LED-toggle show is carried out with a self-fitted LED.
+
+In particular, the on-board blue user-LED found default-fitted
+on `port0.5` is needed for the SPI serial-clock signal (SCK).
+For this reason, a secondary, self-fitted LED is placed on the breadboard
+with a $470\Ohm$ current-limiting resistor and used for blinky toggling.
 
 ![](./images/Osek_pi_crunch_riscv.jpg)

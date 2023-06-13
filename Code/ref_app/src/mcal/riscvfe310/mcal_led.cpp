@@ -20,15 +20,6 @@ extern "C"
     mcal::led::led0().toggle();
     mcal::irq::enable_all();
   }
-
-  void mcal_benchmark_toggle(void);
-
-  void mcal_benchmark_toggle(void)
-  {
-    mcal::irq::disable_all();
-    mcal::led::led1().toggle();
-    mcal::irq::enable_all();
-  }
 }
 
 mcal::led::led_base& mcal::led::led0()
@@ -36,25 +27,11 @@ mcal::led::led_base& mcal::led::led0()
   using led0_port_type = mcal::port::port_pin<std::uint32_t,
                                               std::uint32_t,
                                               mcal::reg::gpio0_base,
-                                              static_cast<std::uint32_t>(UINT8_C(5))>;
+                                              static_cast<std::uint32_t>(UINT8_C(0))>;
 
   using led0_led_type = mcal::led::led_port<led0_port_type>;
 
   static led0_led_type local_led0;
 
   return local_led0;
-}
-
-mcal::led::led_base& mcal::led::led1()
-{
-  using benchmark_port_type = mcal::port::port_pin<std::uint32_t,
-                                                   std::uint32_t,
-                                                   mcal::reg::gpio0_base,
-                                                   static_cast<std::uint32_t>(UINT8_C(19))>;
-
-  using led1_led_type = mcal::led::led_port<benchmark_port_type>;
-
-  static led1_led_type local_led1;
-
-  return local_led1;
 }

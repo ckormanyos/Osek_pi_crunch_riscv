@@ -5,17 +5,19 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef MCAL_LED_2022_12_16_H
-  #define MCAL_LED_2022_12_16_H
+#include <mcal/mcal.h>
 
-  #include <mcal_led/mcal_led_base.h>
+extern "C"
+auto mcal_init(void) -> void;
 
-  namespace mcal
-  {
-    namespace led
-    {
-      led_base& led0();
-    }
-  }
+auto mcal_init(void) -> void
+{
+  ::mcal::init();
+}
 
-#endif // MCAL_LED_2022_12_16_H
+void mcal::init()
+{
+  // Initialize the microcontroller abstraction layer.
+
+  mcal::port::init(nullptr);
+}

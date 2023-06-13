@@ -1,9 +1,5 @@
 
-/*******************************************************************************************************************
-** Includes
-*******************************************************************************************************************/
 #include <stdbool.h>
-#include <stdint.h>
 
 #include <OsAPIs.h>
 #include <OsTcb.h>
@@ -12,9 +8,9 @@ static bool pi_result_is_ok = true;
 
 TASK(T1)
 {
-  extern void mcal_led_toggle(void);
+  extern void pi_led_toggle(void);
 
-  mcal_led_toggle();
+  pi_led_toggle();
 
   const OsEventMaskType OsWaitEventMask = (OsEventMaskType) EVT_BLINK_LED;
 
@@ -32,7 +28,7 @@ TASK(T1)
       {
         OS_ClearEvent(EVT_BLINK_LED);
 
-        mcal_led_toggle();
+        pi_led_toggle();
       }
     }
     else
@@ -51,15 +47,11 @@ TASK(Idle)
 {
   for(;;)
   {
-    extern void mcal_benchmark_toggle(void);
-
-    mcal_benchmark_toggle();
-
     extern int pi_main(void);
 
-    const int next_pi_result = pi_main();
+    const int pi_result = pi_main();
 
-    pi_result_is_ok = ((next_pi_result == (int) INT8_C(0)) && pi_result_is_ok);
+    pi_result_is_ok = ((pi_result == (int) INT8_C(0)) && pi_result_is_ok);
 
     if(!pi_result_is_ok)
     {

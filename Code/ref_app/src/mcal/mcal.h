@@ -5,17 +5,14 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#ifndef MCAL_LED_2022_12_16_H
-  #define MCAL_LED_2022_12_16_H
+#ifndef MCAL_2011_10_20_H
+  #define MCAL_2011_10_20_H
 
-  #include <mcal_led/mcal_led_base.h>
+  #include <mcal_port.h>
 
   namespace mcal
   {
-    namespace led
-    {
-      led_base& led0();
-    }
+    void init();
   }
 
-#endif // MCAL_LED_2022_12_16_H
+#endif // MCAL_2011_10_20_H
