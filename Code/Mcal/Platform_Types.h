@@ -32,11 +32,11 @@ typedef void (*InterruptHandler)(void);
 
 typedef enum
 {
-  FALSE = 0,
+  FALSE,
   TRUE
-}boolean;
+}
+boolean;
 
-#define NULL       (void*)0
-#define NULL_PTR   (void*)0
+#define NULL_PTR ((void*) 0U)
 
 #endif

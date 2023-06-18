@@ -131,6 +131,7 @@ LOPS         = -x none                                              \
 SRC_FILES := $(SRC_DIR)/Mcal/mtimer                                                                   \
              $(SRC_DIR)/Mcal/Clock                                                                    \
              $(SRC_DIR)/Mcal/Mcu                                                                      \
+             $(SRC_DIR)/Mcal/SPI1                                                                     \
              $(SRC_DIR)/Startup/boot                                                                  \
              $(SRC_DIR)/Startup/intvect                                                               \
              $(SRC_DIR)/Startup/Startup                                                               \

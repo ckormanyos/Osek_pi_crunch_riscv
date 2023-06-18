@@ -20,9 +20,6 @@ __asm__ (".option arch, +zicsr");
 __asm__ (".option arch, +zifencei");
 #endif
 
-#pragma GCC push_options
-#pragma GCC optimize ("O0")
-
 //------------------------------------------------------------------------------------------------------------------
 // Include files
 //------------------------------------------------------------------------------------------------------------------
@@ -628,7 +625,7 @@ void OsKernelError(OsStatusType err)
 //-----------------------------------------------------------------------------
 uint32 osGetMaximumStackUsage(uint32 TaskId)
 {
-  uint32* pStack = (uint32*)NULL;
+  uint32* pStack = (uint32*) NULL_PTR;
   uint32 Bottom = OCB_Cfg.pTcb[TaskId]->pstack_bot;
   uint32 Top    = OCB_Cfg.pTcb[TaskId]->pstack_top;
 
@@ -649,5 +646,3 @@ uint32 osGetMaximumStackUsage(uint32 TaskId)
   }
   return((uint32)(OCB_Cfg.pTcb[TaskId]->pstack_top) - Top + sizeof(uint32));
 }
-
-#pragma GCC pop_options
