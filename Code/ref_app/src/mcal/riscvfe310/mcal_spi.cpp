@@ -1,3 +1,12 @@
+///////////////////////////////////////////////////////////////////////////////
+//  Copyright Christopher Kormanyos 2023.
+//  Distributed under the Boost Software License,
+//  Version 1.0. (See accompanying file LICENSE_1_0.txt
+//  or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+
+// ORIGINALLY FROM:
+
 /******************************************************************************************
   Filename    : SPI1.c
   
@@ -15,9 +24,10 @@
   
 ******************************************************************************************/
 
+#include <mcal_irq.h>
+#include <mcal_spi.h>
+
 #include "FE310.h"
-#include "riscv-csr.h"
-#include "SPI1.h"
 
 extern "C"
 void FE310_SPI1_Init(void)
@@ -46,12 +56,10 @@ void FE310_SPI1_Init(void)
   QSPI1->fmt.bit.len     = 8u;  // 8 bits per frame
 }
 
-uint32 spi1::SavedIntLevel;
-
 spi1::spi1()
 {
   // set the Rx watermark
-  QSPI1->rxmark.bit.rxmark = (uint32) 1u;
+  QSPI1->rxmark.bit.rxmark = static_cast<std::uint32_t>(UINT8_C(1));
 }
 
 auto spi1::send(const std::uint8_t byte_to_send) -> bool
@@ -70,18 +78,16 @@ auto spi1::send(const std::uint8_t byte_to_send) -> bool
 
 auto spi1::select() -> void
 {
-  /* enter the critical section to protect the Tx FIFO fill-out from being interrupted */
-  SavedIntLevel = csr_read_clr_bits_mstatus(MSTATUS_MIE_BIT_MASK);
+  mcal::irq::disable_all();
 
-  /* set CS control mode (HOLD) */
-  QSPI1->csmode.bit.mode = (uint32) 2u;
+  // Set CS control mode (HOLD).
+  QSPI1->csmode.bit.mode = static_cast<std::uint32_t>(UINT8_C(2));
 }
 
 auto spi1::deselect() -> void
 {
-  /* set CS control mode (OFF) */
-  QSPI1->csmode.bit.mode = (uint32) 3u;
+  // Set CS control mode (OFF).
+  QSPI1->csmode.bit.mode = static_cast<std::uint32_t>(UINT8_C(3));
 
-  /* exit the critical section */
-  csr_write_mstatus(SavedIntLevel);
+  mcal::irq::enable_all();
 }

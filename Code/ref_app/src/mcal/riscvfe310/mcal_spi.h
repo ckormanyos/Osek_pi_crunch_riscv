@@ -1,10 +1,19 @@
+///////////////////////////////////////////////////////////////////////////////
+//  Copyright Christopher Kormanyos 2023.
+//  Distributed under the Boost Software License,
+//  Version 1.0. (See accompanying file LICENSE_1_0.txt
+//  or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
+
+// ORIGINALLY FROM:
+
 /******************************************************************************************
   Filename    : SPI1.h
   
   Core        : RV32IMAC
   
   MCU         : FE310-G002 (SiFive)
-    
+
   Author      : Chalandi Amine
  
   Owner       : Chalandi Amine
@@ -15,10 +24,10 @@
   
 ******************************************************************************************/
 
-#ifndef __SPI1_H__
-#define __SPI1_H__
+#ifndef MCAL_SPI_2023_06_18_H
+#define MCAL_SPI_2023_06_18_H
 
-#include "Platform_Types.h"
+#include <cstdint>
 
 #include <util/utility/util_communication.h>
 
@@ -39,7 +48,7 @@ public:
   auto deselect() -> void override;
 
 private:
-  static uint32 SavedIntLevel;
+  static std::uint32_t SavedIntLevel;
 };
 
-#endif /* __SPI1_H__ */
+#endif // MCAL_SPI_2023_06_18_H

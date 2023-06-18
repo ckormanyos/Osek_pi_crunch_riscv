@@ -131,7 +131,6 @@ LOPS         = -x none                                              \
 SRC_FILES := $(SRC_DIR)/Mcal/mtimer                                                                   \
              $(SRC_DIR)/Mcal/Clock                                                                    \
              $(SRC_DIR)/Mcal/Mcu                                                                      \
-             $(SRC_DIR)/Mcal/SPI1                                                                     \
              $(SRC_DIR)/Startup/boot                                                                  \
              $(SRC_DIR)/Startup/intvect                                                               \
              $(SRC_DIR)/Startup/Startup                                                               \
@@ -142,6 +141,7 @@ SRC_FILES := $(SRC_DIR)/Mcal/mtimer                                             
              $(SRC_DIR)/ref_app/src/mcal/riscvfe310/mcal_irq                                          \
              $(SRC_DIR)/ref_app/src/mcal/riscvfe310/mcal_led                                          \
              $(SRC_DIR)/ref_app/src/mcal/riscvfe310/mcal_port                                         \
+             $(SRC_DIR)/ref_app/src/mcal/riscvfe310/mcal_spi                                          \
              $(SRC_DIR)/ref_app/target/micros/riscvfe310/startup/crt0                                 \
              $(SRC_DIR)/ref_app/target/micros/riscvfe310/startup/crt0_init_ram                        \
              $(SRC_DIR)/ref_app/target/micros/riscvfe310/startup/crt1                                 \
