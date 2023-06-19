@@ -15,14 +15,10 @@ auto mcal_init(void) -> void
   ::mcal::init();
 }
 
-extern "C"
-void FE310_SPI1_Init(void);
-
 void mcal::init()
 {
   // Initialize the microcontroller abstraction layer.
 
   mcal::port::init(nullptr);
-
-  ::FE310_SPI1_Init();
+  mcal::spi::init(nullptr);
 }

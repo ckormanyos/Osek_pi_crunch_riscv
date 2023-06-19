@@ -9,6 +9,7 @@
   #define MCAL_2011_10_20_H
 
   #include <mcal_port.h>
+  #include <mcal_spi.h>
 
   namespace mcal
   {
