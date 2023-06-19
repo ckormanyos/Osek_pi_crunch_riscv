@@ -34,9 +34,9 @@ GNU/GCC `riscv32-unknown-elf` is used for target system
 development on `*nix`. The build system is based on
 Standard GNUmake/shell-script.
 
-## Building the Application
+# Building the Application
 
-### Build with GNUmake on `*nix`
+## Build with GNUmake on `*nix`
 
 Build on `*nix*` is easy using an installed `gcc-arm-none-eabi`
 
@@ -76,7 +76,7 @@ featuring a self-fitted LED on `port0.0` toggling at 1/2 Hz.
 This provides clear visual measure of both system-OK as well as
 numerical correctness of the most-recently finished spigot calculation.
 
-# Hardware Setup
+## Hardware Setup
 
 The hardware setup is pictured in the image below.
 
@@ -96,7 +96,7 @@ with a $470{\Omega}$ current-limiting resistor has been
 placed on the breadboard on `port0.0`. This self-fitted,
 green LED on `port0.0` is used for the blinky show.
 
-# Breadboard Layout
+## Breadboard Layout
 
 The breadboard layout (without the microcontroller board) is shown below.
 
