@@ -80,6 +80,8 @@ numerical correctness of the most-recently finished spigot calculation.
 
 The hardware setup is pictured in the image below.
 
+![](./images/Osek_pi_crunch_riscv.jpg)
+
 The blinky LED-toggle show is carried out with a self-fitted LED
 on `port0.0`.
 
@@ -94,4 +96,8 @@ with a $470{\Omega}$ current-limiting resistor has been
 placed on the breadboard on `port0.0`. This self-fitted,
 green LED on `port0.0` is used for the blinky show.
 
-![](./images/Osek_pi_crunch_riscv.jpg)
+# Breadboard Layout
+
+The breadboard layout (without the microcontroller board) is shown below.
+
+![](./images/Osek_pi_crunch_riscv_layout.jpg)
