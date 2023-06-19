@@ -6,7 +6,7 @@ on:
   pull_request:
 jobs:
   target-gcc-riscv64-unknown-elf:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
