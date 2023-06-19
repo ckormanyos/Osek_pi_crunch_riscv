@@ -20,4 +20,5 @@ void mcal::init()
   // Initialize the microcontroller abstraction layer.
 
   mcal::port::init(nullptr);
+  mcal::spi::init(nullptr);
 }
