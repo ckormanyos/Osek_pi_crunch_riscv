@@ -30,7 +30,7 @@ The basic spigot algorithm for computing digits of $\pi$
 in base-10 is given by
 (Eq. 6.1, Sect. 6.1, page 78 of Arndt and Haenel [2]):
 
-$$\dfrac{1}{3}\Biggl(2 + \dfrac{2}{5}\Biggl( 2 + \dfrac{3}{7}\Biggl(2 + \ldots \Biggr)\Biggr)\Biggr)$$# Building the Application
+$$\dfrac{1}{3}\Biggl(2 + \dfrac{2}{5}\Biggl( 2 + \dfrac{3}{7}\Biggl(2 + \ldots \Biggr)\Biggr)\Biggr)$$
 
 In the code, this equation is primarily implemented in the
 `calculate()` method of the `pi_spigot` template class
@@ -60,6 +60,8 @@ for storage.
 GNU/GCC `riscv32-unknown-elf` is used for target system
 development on `*nix`. The build system is based on
 Standard GNUmake/shell-script.
+
+# Building the Application
 
 ## Build with GNUmake on `*nix`
 
