@@ -29,8 +29,6 @@
 #include <iostream>
 #endif // PI_CRUNCH_METAL_STANDALONE_MAIN
 
-#if (defined(PI_CRUNCH_METAL_CFG_METHOD) && (PI_CRUNCH_METAL_CFG_METHOD == PI_CRUNCH_METAL_CFG_USE_PI_SPIGOT))
-
 #include <math/checksums/hash/hash_sha1.h>
 #include <math/pi_spigot/pi_spigot.h>
 #include <mcal_benchmark.h>
@@ -167,8 +165,6 @@ auto main(void) -> int
 
   return (result_is_ok ? 0 : -1);
 }
-
-#endif // PI_CRUNCH_METAL_STANDALONE_MAIN
 
 #else
 

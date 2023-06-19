@@ -28,7 +28,6 @@
 #include <cstdint>
 
 #include "FE310.h"
-#include "riscv-csr.h"
 
 #include <mcal_irq.h>
 #include <mcal_spi.h>
@@ -54,7 +53,7 @@ namespace local
     GPIO0->iof_en.bit.pin5 = 1u; // SPI1_SCK
 
     /* Configure the SPI controller */
-    QSPI1->sckdiv.bit.div  = 95u; // 1MHz
+    QSPI1->sckdiv.bit.div  = 47u; // 2MHz
     QSPI1->sckmode.bit.pha = 0u;  // Clock phase = 0 ==> data sampled on rising edge and shifted out on the falling edge
     QSPI1->sckmode.bit.pol = 0u;  // Clock polarity = 0 ==> idle state of the clock is low
     QSPI1->csid            = 0u;  // SS0 is selected
@@ -65,8 +64,6 @@ namespace local
     QSPI1->fmt.bit.len     = 8u;  // 8 bits per frame
   }
 } // namespace local;
-
-std::uint32_t mcal_spi_saved_int_level;
 
 class spi1 : public ::util::communication_buffer_depth_one_byte
 {
@@ -99,7 +96,7 @@ public:
 
   auto select() -> void override
   {
-    mcal_spi_saved_int_level = csr_read_clr_bits_mstatus(MSTATUS_MIE_BIT_MASK);
+    mcal::irq::disable_all();
 
     // Set CS control mode (HOLD).
     QSPI1->csmode.bit.mode = static_cast<std::uint32_t>(UINT8_C(2));
@@ -110,7 +107,7 @@ public:
     // Set CS control mode (OFF).
     QSPI1->csmode.bit.mode = static_cast<std::uint32_t>(UINT8_C(3));
 
-    csr_write_mstatus(mcal_spi_saved_int_level);
+    mcal::irq::enable_all();
   }
 };
 
