@@ -65,7 +65,8 @@ PATH=./riscv32-embecosm-gcc-ubuntu2004-20230507/bin:$PATH
 This repo features a fully-worked-out prototype example project.
 The prototype runs on a RISC-V FE310 controller fitted on the
 SparkFun _Red_ _Thing_ RISC-V FE310 Board.
-The board is driven in OS-less, bare-metal mode.
+The board is driven in bottom-to-top, hand-written bare-metal mode,
+portable where possible.
 
 The $\pi$-spigot calculation runs continuously and successively
 in the low-priority idle task (`Idle`). Upon successful calculation completion,
