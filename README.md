@@ -13,6 +13,10 @@ Osek_pi_crunch_riscv is a fascinating, educational and fun project
 that computes a up to $100,001$ decimal digits of $\pi$
 on a bare-metal RISC-V FE310 system.
 
+The board is driven in bottom-to-top, hand-written, bare-metal mode.
+The software upper layers including algorithms and SRAM communication
+are chip-independent and portable.
+
 The backbone real-time operating system is taken directly
 from the OSEK-like OS for RISC-V implemented in
 [Chalandi/OSEK_RISC-V_SiFive_FE310_SoC](https://github.com/Chalandi/OSEK_RISC-V_SiFive_FE310_SoC)
@@ -65,8 +69,6 @@ PATH=./riscv32-embecosm-gcc-ubuntu2004-20230507/bin:$PATH
 This repo features a fully-worked-out prototype example project.
 The prototype runs on a RISC-V FE310 controller fitted on the
 SparkFun _Red_ _Thing_ RISC-V FE310 Board.
-The board is driven in bottom-to-top, hand-written bare-metal mode,
-portable where possible.
 
 The $\pi$-spigot calculation runs continuously and successively
 in the low-priority idle task (`Idle`). Upon successful calculation completion,
