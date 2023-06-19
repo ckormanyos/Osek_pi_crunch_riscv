@@ -33,8 +33,12 @@ in base-10 is given by
 $$\dfrac{1}{3}\Biggl(2 + \dfrac{2}{5}\Biggl( 2 + \dfrac{3}{7}\Biggl(2 + \ldots \Biggr)\Biggr)\Biggr)$$
 
 In the code, this equation is primarily implemented in the
-`calculate()` method of the `pi_spigot` template class
+[`calculate()`](https://github.com/ckormanyos/Osek_pi_crunch_riscv/blob/caeb629494aab3c31d8a26de977aac01f37aefc5/Code/ref_app/src/math/pi_spigot/pi_spigot.h#L116)
+method of the
+[`pi_spigot` template class](https://github.com/ckormanyos/Osek_pi_crunch_riscv/blob/caeb629494aab3c31d8a26de977aac01f37aefc5/Code/ref_app/src/math/pi_spigot/pi_spigot.h#L45),
 which resides in namespace `math::constants`.
+
+This algorithm is written in portable, (somewhat) advanced C++.
 
 ## Further Information
 
