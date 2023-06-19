@@ -34,9 +34,9 @@ GNU/GCC `riscv32-unknown-elf` is used for target system
 development on `*nix`. The build system is based on
 Standard GNUmake/shell-script.
 
-## Building the Application
+# Building the Application
 
-### Build with GNUmake on `*nix`
+## Build with GNUmake on `*nix`
 
 Build on `*nix*` is easy using an installed `gcc-arm-none-eabi`
 
@@ -65,7 +65,8 @@ PATH=./riscv32-embecosm-gcc-ubuntu2004-20230507/bin:$PATH
 This repo features a fully-worked-out prototype example project.
 The prototype runs on a RISC-V FE310 controller fitted on the
 SparkFun _Red_ _Thing_ RISC-V FE310 Board.
-The board is driven in OS-less, bare-metal mode.
+The board is driven in bottom-to-top, hand-written bare-metal mode,
+portable where possible.
 
 The $\pi$-spigot calculation runs continuously and successively
 in the low-priority idle task (`Idle`). Upon successful calculation completion,
@@ -76,9 +77,11 @@ featuring a self-fitted LED on `port0.0` toggling at 1/2 Hz.
 This provides clear visual measure of both system-OK as well as
 numerical correctness of the most-recently finished spigot calculation.
 
-# Hardware Setup
+## Hardware Setup
 
 The hardware setup is pictured in the image below.
+
+![](./images/Osek_pi_crunch_riscv.jpg)
 
 The blinky LED-toggle show is carried out with a self-fitted LED
 on `port0.0`.
@@ -94,4 +97,8 @@ with a $470{\Omega}$ current-limiting resistor has been
 placed on the breadboard on `port0.0`. This self-fitted,
 green LED on `port0.0` is used for the blinky show.
 
-![](./images/Osek_pi_crunch_riscv.jpg)
+## Breadboard Layout
+
+The breadboard layout (without the microcontroller board) is shown below.
+
+![](./images/Osek_pi_crunch_riscv_layout.jpg)
