@@ -18,8 +18,9 @@
 // below, however, only allow for testing up to about 100,000
 // decimal digits.
 
-// cd /mnt/c/Users/User/Documents/Ks/uC_Software/Boards/pi-crunch-metal
-// g++ -Werror -Wall -Wextra -Wpedantic -Wconversion -Wsign-conversion -Wshadow -Wundef -Wunused-parameter -Wuninitialized -Wunreachable-code -Winit-self -Wzero-as-null-pointer-constant -O3 -std=c++17 -finline-functions -finline-limit=64 -Isrc -Isrc/mcal/host -DPI_CRUNCH_METAL_STANDALONE_MAIN -DPI_CRUNCH_METAL_CFG_METHOD=PI_CRUNCH_METAL_CFG_USE_PI_SPIGOT ./src/app/Appli/pi_agm/pi_agm.cpp ./src/app/Appli/pi_spigot/pi_spigot.cpp ./src/mcal/host/mcal_cpu.cpp ./src/mcal/host/mcal_gpt.cpp ./src/mcal/host/mcal_irq.cpp ./src/mcal/host/mcal_lcd.cpp ./src/mcal/host/mcal_led.cpp ./src/mcal/host/mcal_port.cpp ./src/mcal/host/mcal_spi.cpp ./src/mcal/mcal.cpp -o pi-crunch-metal
+// cd /mnt/c/Users/User/Documents/Ks/uC_Software/Boards/Osek_pi_crunch_riscv
+// PATH=./riscv32-embecosm-gcc-ubuntu2004-20230507/bin:$PATH
+// ./Build.sh
 
 #include <mcal_memory/mcal_memory_sram_array.h>
 #include <pi_calc_cfg.h>

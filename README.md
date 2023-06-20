@@ -130,6 +130,22 @@ green LED on `port0.0` is used for the blinky show.
 
 The breadboard layout (without the microcontroller board) is shown below.
 
+# Licensing
+
+The operating system [OSEK](./Code/OSEK) and the self-written
+and files in the [MCAL](./Code/Mcal)
+are licensed under [GPL](./gpl-3.0.txt).
+This is consistent with the licensing found in and adopted from
+[Chalandi/OSEK_RISC-V_SiFive_FE310_SoC](https://github.com/Chalandi/OSEK_RISC-V_SiFive_FE310_SoC).
+
+The supporting files in [ref_app](./Code/ref_app) and
+the [pi_spigot](./Code/pi_spigot/pi_spigot.cpp) application itself
+are licensed under [BSL](./LICENSE_1_0.txt).
+
+The file [riscv-csr.h](./Code/Mcal/riscv-csr.h)
+originates from [Five EmbedDev](https://five-embeddev.com) and is
+(as originally found there) provided with no license.
+
 # References
 
 ![](./images/Osek_pi_crunch_riscv_layout.jpg)
