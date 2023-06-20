@@ -5,7 +5,7 @@
 //  or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-// Some of the FE310 SPI1 codes are Originally From:
+// Some OF THE FE310 SPI1 codes are Originally From:
 
 /******************************************************************************************
   Filename    : SPI1.c
@@ -35,11 +35,6 @@
 
   #include <util/utility/util_communication.h>
 
-  extern "C"
-  {
-    void FE310_SPI1_Init(void);
-  }
-
   namespace mcal { namespace spi {
 
   class spi1 : public ::util::communication_buffer_depth_one_byte
@@ -50,7 +45,7 @@
   public:
     spi1()
     {
-      ::FE310_SPI1_Init();
+      FE310_SPI1_Init();
 
       // Set the Rx watermark to (1 - 1 = 0), since we will restrict
       // the driver to sending/receiving 1 byte only per transfer.
@@ -73,6 +68,27 @@
       return true;
     }
 
+    auto send_n(base_class_type::send_iterator_type first,
+                base_class_type::send_iterator_type last) -> bool override
+    {
+      while(first != last)
+      {
+        const auto byte_to_send = static_cast<base_class_type::buffer_value_type>(*first++);
+
+        static_cast<void>(send(byte_to_send));
+      }
+
+      return true;
+    }
+
+    auto recv(std::uint8_t& byte_to_recv) -> bool override
+    {
+      // Read the (single byte from the) RX FIFO.
+      byte_to_recv = base_class_type::recv_buffer;
+
+      return true;
+    }
+
     auto select() -> void override
     {
       mcal::irq::disable_all();
@@ -87,6 +103,33 @@
       QSPI1->csmode.bit.mode = static_cast<std::uint32_t>(UINT8_C(3));
 
       mcal::irq::enable_all();
+    }
+
+  private:
+    static void FE310_SPI1_Init()
+    {
+      /* Configure the programmed IO pins */
+      GPIO0->iof_sel.bit.pin2 = 0u; // SPI1_SS0
+      GPIO0->iof_sel.bit.pin3 = 0u; // SPI1_MOSI
+      GPIO0->iof_sel.bit.pin4 = 0u; // SPI1_MISO
+      GPIO0->iof_sel.bit.pin5 = 0u; // SPI1_SCK
+
+      /* Enable the programmed IO pins */
+      GPIO0->iof_en.bit.pin2 = 1u; // SPI1_SS0
+      GPIO0->iof_en.bit.pin3 = 1u; // SPI1_MOSI
+      GPIO0->iof_en.bit.pin4 = 1u; // SPI1_MISO
+      GPIO0->iof_en.bit.pin5 = 1u; // SPI1_SCK
+
+      /* Configure the SPI controller */
+      QSPI1->sckdiv.bit.div  = 23u; // 4MHz
+      QSPI1->sckmode.bit.pha = 0u;  // Clock phase = 0 ==> data sampled on rising edge and shifted out on the falling edge
+      QSPI1->sckmode.bit.pol = 0u;  // Clock polarity = 0 ==> idle state of the clock is low
+      QSPI1->csid            = 0u;  // SS0 is selected
+      QSPI1->csmode.bit.mode = 2u;  // CS mode is HOLD
+      QSPI1->fmt.bit.proto   = 0u;  // Mode is SPI
+      QSPI1->fmt.bit.endian  = 0u;  // Transmit most-significant bit (MSB) first
+      QSPI1->fmt.bit.dir     = 0u;  // FIFO is used
+      QSPI1->fmt.bit.len     = 8u;  // 8 bits per frame
     }
   };
 

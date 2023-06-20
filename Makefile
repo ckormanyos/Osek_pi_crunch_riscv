@@ -47,7 +47,7 @@ PYTHON    = python3
 # C Compiler flags
 ############################################################################################
 
-OPT_MODIFIED := -O2                                                   \
+OPT_MODIFIED := -Os                                                   \
                 -fno-reorder-blocks-and-partition                     \
                 -fno-reorder-functions
 
@@ -128,9 +128,9 @@ LOPS         = -x none                                              \
 ############################################################################################
 # Source Files
 ############################################################################################
-SRC_FILES := $(SRC_DIR)/Mcal/mtimer                                                                   \
-             $(SRC_DIR)/Mcal/Clock                                                                    \
+SRC_FILES := $(SRC_DIR)/Mcal/Clock                                                                    \
              $(SRC_DIR)/Mcal/Mcu                                                                      \
+             $(SRC_DIR)/Mcal/mtimer                                                                   \
              $(SRC_DIR)/Startup/boot                                                                  \
              $(SRC_DIR)/Startup/intvect                                                               \
              $(SRC_DIR)/Startup/Startup                                                               \

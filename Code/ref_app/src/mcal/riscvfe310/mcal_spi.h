@@ -12,11 +12,11 @@
 
   namespace mcal { namespace spi {
 
-  typedef void config_type;
+  using config_type = void;
 
-  inline void init(const config_type*) { }
+  inline auto init(const config_type*) -> void { }
 
-  util::communication_base& spi_channels();
+  auto spi_channels() -> util::communication_buffer_depth_one_byte&;
 
   } }
 
