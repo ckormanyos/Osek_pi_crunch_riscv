@@ -24,19 +24,15 @@
   
 ******************************************************************************************/
 
+#include <array>
 #include <cstddef>
-#include <cstdint>
 
-#include "FE310.h"
-
-#include <mcal_irq.h>
 #include <mcal_spi.h>
+#include <mcal_spi_spi1.h>
 
-#include <util/utility/util_communication.h>
-
-namespace local
+extern "C"
 {
-  constexpr auto mcal_spi_channel_count = static_cast<std::size_t>(UINT8_C(1));
+  void FE310_SPI1_Init(void);
 
   void FE310_SPI1_Init(void)
   {
@@ -53,7 +49,7 @@ namespace local
     GPIO0->iof_en.bit.pin5 = 1u; // SPI1_SCK
 
     /* Configure the SPI controller */
-    QSPI1->sckdiv.bit.div  = 47u; // 2MHz
+    QSPI1->sckdiv.bit.div  = 31u; // 3MHz
     QSPI1->sckmode.bit.pha = 0u;  // Clock phase = 0 ==> data sampled on rising edge and shifted out on the falling edge
     QSPI1->sckmode.bit.pol = 0u;  // Clock polarity = 0 ==> idle state of the clock is low
     QSPI1->csid            = 0u;  // SS0 is selected
@@ -63,71 +59,31 @@ namespace local
     QSPI1->fmt.bit.dir     = 0u;  // FIFO is used
     QSPI1->fmt.bit.len     = 8u;  // 8 bits per frame
   }
-} // namespace local;
+}
 
-class spi1 : public ::util::communication_buffer_depth_one_byte
+namespace local
 {
-private:
-  using base_class_type = util::communication_buffer_depth_one_byte;
+  using mcal_spi_type = mcal::spi::spi1;
 
-public:
-  spi1()
+  mcal_spi_type com0;
+
+  constexpr auto mcal_spi_channel_count = static_cast<std::size_t>(UINT8_C(1));
+
+  using communication_base_array_type =
+    std::array<::util::communication_base*, mcal_spi_channel_count>;
+
+  communication_base_array_type com_channel_pointers
   {
-    // Set the Rx watermark to (1 - 1 = 0), since we will restrict
-    // the driver to sending/receiving 1 byte only per transfer.
-    QSPI1->rxmark.bit.rxmark = static_cast<std::uint32_t>(UINT8_C(0));
-  }
-
-  ~spi1() override = default;
-
-  auto send(const std::uint8_t byte_to_send) -> bool override
-  {
-    // Fill the Tx FIFO.
-    QSPI1->txdata.bit.data = byte_to_send;
-
-    // Wait for the Rx FIFO to be full.
-    while(!QSPI1->ip.bit.rxwm);
-
-    // Read the (single byte from the) RX FIFO.
-    base_class_type::recv_buffer = QSPI1->rxdata.bit.data;
-
-    return true;
-  }
-
-  auto select() -> void override
-  {
-    mcal::irq::disable_all();
-
-    // Set CS control mode (HOLD).
-    QSPI1->csmode.bit.mode = static_cast<std::uint32_t>(UINT8_C(2));
-  }
-
-  auto deselect() -> void override
-  {
-    // Set CS control mode (OFF).
-    QSPI1->csmode.bit.mode = static_cast<std::uint32_t>(UINT8_C(3));
-
-    mcal::irq::enable_all();
-  }
-};
-
-void mcal::spi::init(const config_type*)
-{
-  local::FE310_SPI1_Init();
+    &com0
+  };
 }
 
 util::communication_base& mcal::spi::spi_channels()
 {
-  using mcal_spi0_type = spi1;
+  using local_com_multichannel_type =
+    util::communication_multi_channel<std::tuple_size<local::communication_base_array_type>::value>;
 
-  static mcal_spi0_type com0;
-
-  static util::communication_base* com_channel_pointers[local::mcal_spi_channel_count] =
-  {
-    &com0
-  };
-
-  static util::communication_multi_channel<local::mcal_spi_channel_count> com_channels(com_channel_pointers);
+  static local_com_multichannel_type com_channels { local::com_channel_pointers.data() };
 
   return com_channels;
 }
