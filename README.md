@@ -130,6 +130,8 @@ green LED on `port0.0` is used for the blinky show.
 
 The breadboard layout (without the microcontroller board) is shown below.
 
+![](./images/Osek_pi_crunch_riscv_layout.jpg)
+
 # Licensing
 
 The operating system [OSEK](./Code/OSEK) and the self-written
@@ -147,8 +149,6 @@ originates from [Five EmbedDev](https://five-embeddev.com) and is
 (as originally found there) provided with no license.
 
 # References
-
-![](./images/Osek_pi_crunch_riscv_layout.jpg)
 
 [1] S. Rabinowitz and S. Wagon:
 _A_ _Spigot_ _Algorithm_ _for_ _the_ _Digits_ _of_ _Pi_,
