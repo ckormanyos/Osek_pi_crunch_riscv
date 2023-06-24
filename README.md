@@ -69,7 +69,7 @@ Standard GNUmake/shell-script.
 
 ## Build with GNUmake on `*nix`
 
-Build on `*nix*` is easy using an installed `gcc-arm-none-eabi`
+Build on `*nix*` is easy using an installed `riscv32-unknown-elf`
 
 ```sh
 cd Osek_pi_crunch_riscv
@@ -79,8 +79,8 @@ cd Osek_pi_crunch_riscv
 The build results including ELF-file, HEX-mask, MAP-file
 can be found in the `Output` directory following the GNUmake build.
 
-If `riscv32-unknown-elf` is not present, then it can be obtained (if needed)
-with `wget`, e.g. from
+If `riscv32-unknown-elf` is not installed nor present,
+then it can be obtained (if needed) with `wget`, e.g. from
 [Embecosm](https://www.embecosm.com/resources/tool-chain-downloads/#riscv-stable).
 When doing this, remember also to add the directory of the extracted toolchain locally
 to `PATH` for the build.
@@ -112,8 +112,8 @@ The hardware setup is pictured in the image below.
 
 ![](./images/Osek_pi_crunch_riscv.jpg)
 
-The blinky LED-toggle show is carried out with a self-fitted LED
-on `port0.0`.
+We emphasize that the blinky LED-toggle show is carried out
+with a self-fitted LED on `port0.0`.
 
 Consider, in particular, the on-board, blue user-LED found default-fitted
 on `port0.5`. As is usual for Arduino-compatible pinouts,
@@ -135,8 +135,7 @@ The breadboard layout (without the microcontroller board) is shown below.
 # Licensing
 
 The operating system [OSEK](./Code/OSEK) and the self-written
-and files in the [MCAL](./Code/Mcal)
-are licensed under [GPL](./gpl-3.0.txt).
+files in the [MCAL](./Code/Mcal) are licensed under [GPL](./gpl-3.0.txt).
 This is consistent with the licensing found in and adopted from
 [Chalandi/OSEK_RISC-V_SiFive_FE310_SoC](https://github.com/Chalandi/OSEK_RISC-V_SiFive_FE310_SoC).
 
