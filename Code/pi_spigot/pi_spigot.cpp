@@ -11,12 +11,11 @@
 // pi_spigot.cpp
 
 // This program can be used to compute many thousands
-// of decimal digits of digits of pi. Although it uses
-// a so-called spigot algorithm having quadratic complexity,
-// this program can, albeit slowly, compute up to a few million
-// decimal digits of pi on a PC host. The test data provided
-// below, however, only allow for testing up to about 100,000
-// decimal digits.
+// of decimal digits of digits of pi. It uses a so-called
+// "spigot" algorithm having quadratic complexity.
+
+// In this embedded software adaptation of this work,
+// we limit the decimal digit count to about 100k or fewer.
 
 // cd /mnt/c/Users/User/Documents/Ks/uC_Software/Boards/Osek_pi_crunch_riscv
 // PATH=./riscv32-embecosm-gcc-ubuntu2004-20230507/bin:$PATH
