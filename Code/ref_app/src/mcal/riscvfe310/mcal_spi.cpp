@@ -8,9 +8,9 @@
 #include <mcal_spi.h>
 #include <mcal_spi_spi1.h>
 
-auto mcal::spi::spi_channels() -> util::communication_buffer_depth_one_byte&
+auto mcal::spi::spi_channels() -> communication_type&
 {
-  static mcal::spi::spi1 com_spi1;
+  static communication_type com_spi1;
 
   return com_spi1;
 }

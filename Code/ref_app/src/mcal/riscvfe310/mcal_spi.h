@@ -8,7 +8,7 @@
 #ifndef MCAL_SPI_2012_05_24_H_
   #define MCAL_SPI_2012_05_24_H_
 
-  #include <util/utility/util_communication.h>
+  #include <mcal_spi_spi1.h>
 
   namespace mcal { namespace spi {
 
@@ -16,7 +16,9 @@
 
   inline auto init(const config_type*) -> void { }
 
-  auto spi_channels() -> util::communication_buffer_depth_one_byte&;
+  using communication_type = ::util::communication<::mcal::spi::spi1>;
+
+  auto spi_channels() -> communication_type&;
 
   } }
 
