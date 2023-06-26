@@ -11,6 +11,7 @@
   #include <array>
 
   #include <mcal_cpu.h>
+  #include <mcal_spi.h>
   #include <mcal_memory/mcal_memory_sram_types.h>
   #include <util/utility/util_communication.h>
   #include <util/utility/util_noncopyable.h>
@@ -22,6 +23,8 @@
   class mcal_memory_sram_generic_spi : private util::noncopyable
   {
   public:
+    using communication_type = mcal::spi::communication_type;
+
     // instruction   instruction    HEX       instruction
     //    name          format      code      description
     //
@@ -31,7 +34,7 @@
     static constexpr auto read_cmd  = static_cast<std::uint8_t>(UINT8_C(0x03));
     static constexpr auto write_cmd = static_cast<std::uint8_t>(UINT8_C(0x02));
 
-    constexpr explicit mcal_memory_sram_generic_spi(util::communication_buffer_depth_one_byte& com)
+    constexpr explicit mcal_memory_sram_generic_spi(communication_type& com)
       : my_com(com) { }
 
     ~mcal_memory_sram_generic_spi() = default;
@@ -58,11 +61,11 @@
           static_cast<std::uint8_t>(UINT8_C(0xFF))
         };
 
-      my_com.select();
+      communication_type::select();
       static_cast<void>(my_com.send_n(cmd.cbegin(), cmd.cend()));
-      my_com.deselect();
+      communication_type::deselect();
 
-      *p_byte_to_read = my_com.recv_buffer;
+      my_com.recv(*p_byte_to_read);
 
       return true;
     }
@@ -104,15 +107,16 @@
               static_cast<std::uint8_t>(addr_chan >>  0U)
             };
 
-          my_com.select();
+          communication_type::select();
           static_cast<void>(my_com.send_n(cmd.cbegin(), cmd.end()));
 
           for(auto i = static_cast<std::size_t>(UINT8_C(0)); i < count; ++i)
           {
             static_cast<void>(my_com.send(static_cast<std::uint8_t>(UINT8_C(0xFF))));
-            *(p_data_to_read + i) = my_com.recv_buffer;
+
+            my_com.recv(*(p_data_to_read + i));
           }
-          my_com.deselect();
+          communication_type::deselect();
         }
         else
         {
@@ -150,9 +154,9 @@
           *p_byte_to_write
         };
 
-      my_com.select();
+      communication_type::select();
       static_cast<void>(my_com.send_n(cmd.cbegin(), cmd.cend()));
-      my_com.deselect();
+      communication_type::deselect();
 
       return true;
     }
@@ -194,14 +198,14 @@
               static_cast<std::uint8_t>(addr_chan >>  0U)
             };
 
-          my_com.select();
+          communication_type::select();
           static_cast<void>(my_com.send_n(cmd.cbegin(), cmd.cend()));
 
           for(auto i = static_cast<std::size_t>(UINT8_C(0)); i < count; ++i)
           {
             static_cast<void>(my_com.send(*(p_data_to_write + i)));
           }
-          my_com.deselect();
+          communication_type::deselect();
         }
         else
         {
@@ -218,7 +222,7 @@
     }
 
   private:
-    util::communication_buffer_depth_one_byte& my_com;
+    communication_type& my_com;
 
     mcal_memory_sram_generic_spi() = delete;
 

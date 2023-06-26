@@ -13,67 +13,34 @@
   #include <cstddef>
   #include <cstdint>
 
-  #include <mcal_memory/mcal_memory_sram_types.h>
   #include <util/utility/util_noncopyable.h>
-
-  namespace mcal { namespace spi {
-
-  // Forward declaration of the mcal::spi::spi1 class.
-  class spi1;
-
-  } } // namespace mcal::spi
-
-  namespace mcal { namespace memory { namespace sram {
-
-  template<const mcal_sram_uintptr_t ByteSizeTotal,
-           const mcal_sram_uintptr_t PageGranularity>
-  class mcal_memory_sram_generic_spi;
-
-  } } } // namespace mcal::memory::sram
 
   namespace util
   {
-    class communication_base : private util::noncopyable
+    template<typename CommunicationEngineType>
+    class communication final : private util::noncopyable
     {
     public:
-      using buffer_value_type = std::uint8_t;
+      using communication_engine_type = CommunicationEngineType;
 
-      using send_iterator_type = const buffer_value_type*;
+      auto recv(std::uint8_t& byte_to_recv) -> bool { return my_com_engine.recv(byte_to_recv); }
 
-      virtual ~communication_base() = default;
+      static auto   select() -> void { communication_engine_type::select(); }
+      static auto deselect() -> void { communication_engine_type::deselect(); }
 
-      virtual auto recv(std::uint8_t& byte_to_recv) -> bool = 0;
+      template<typename SendIteratorType>
+      auto send_n(SendIteratorType first, SendIteratorType last) -> bool { return my_com_engine.send_n(first, last); }
 
-      virtual auto   select() -> void = 0;
-      virtual auto deselect() -> void = 0;
-
-      virtual auto send_n(send_iterator_type first, send_iterator_type last) -> bool = 0;
-
-      virtual auto send(const std::uint8_t byte_to_send) -> bool = 0;
+      auto send(const std::uint8_t byte_to_send) -> bool { return my_com_engine.send(byte_to_send); }
 
     protected:
-      communication_base() = default;
+      communication_engine_type my_com_engine { };
     };
 
-    class communication_buffer_depth_one_byte : public communication_base
+    namespace communication_buffer_depth_one_byte
     {
-    private:
-      using base_class_type = communication_base;
-
-    public:
-      ~communication_buffer_depth_one_byte() override = default;
-
-      communication_buffer_depth_one_byte() = default;
-
-    private:
-      base_class_type::buffer_value_type recv_buffer { };
-
-      friend class mcal::spi::spi1;
-
-      template<const mcal_sram_uintptr_t ByteSizeTotal,
-               const mcal_sram_uintptr_t PageGranularity>
-      friend class mcal::memory::sram::mcal_memory_sram_generic_spi;
-    };
+      using buffer_value_type = std::uint8_t;
+    } // namespace communication_buffer_depth_one_byte
   }
 
 #endif // UTIL_COMMUNICATION_2012_05_31_H

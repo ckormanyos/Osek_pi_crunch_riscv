@@ -26,19 +26,19 @@ extern "C" {
 #endif
 
 #ifdef __cplusplus
-  #define   __I     volatile        
+  #define   __I     volatile
 #else
-  #define   __I     volatile const  
+  #define   __I     volatile const
 #endif
 
-#define     __O     volatile        
-#define     __IO    volatile        
+#define     __O     volatile
+#define     __IO    volatile
 
-#define     __IM     volatile const 
-#define     __OM     volatile       
-#define     __IOM    volatile       
+#define     __IM     volatile const
+#define     __OM     volatile
+#define     __IOM    volatile
 
-#include "Platform_Types.h"
+#include <Platform_Types.h>
 
 /* ================================================================================ */
 /* ================       Device Specific Peripheral Section       ================ */
