@@ -31,26 +31,17 @@
 
   #include <FE310.h>
   #include <mcal_irq.h>
-  #include <mcal_memory/mcal_memory_sram_types.h>
+
   #include <util/utility/util_communication.h>
-
-  namespace mcal { namespace memory { namespace sram {
-
-  // Forward declaration of mcal_memory_sram_generic_spi (needed for class freindship).
-
-  template<const mcal_sram_uintptr_t ByteSizeTotal,
-           const mcal_sram_uintptr_t PageGranularity>
-  class mcal_memory_sram_generic_spi;
-
-  } } } // namespace mcal::memory::sram
 
   namespace mcal { namespace spi {
 
   class spi1
   {
-  public:
+  private:
     using buffer_value_type = ::util::communication_buffer_depth_one_byte::buffer_value_type;
 
+  public:
     spi1()
     {
       FE310_SPI1_Init();
@@ -64,29 +55,19 @@
 
     auto send(const std::uint8_t byte_to_send) -> bool
     {
-      do_send(byte_to_send);
+      // Fill the Tx FIFO.
+      QSPI1->txdata.bit.data = byte_to_send;
+
+      // Wait for the Rx FIFO to be full.
+      while(QSPI1->ip.bit.rxwm == static_cast<std::uint32_t>(UINT8_C(0))) { ; }
+
+      // Read the (single byte from the) RX FIFO.
+      recv_buffer = static_cast<buffer_value_type>(QSPI1->rxdata.bit.data);
 
       return true;
     }
 
-    template<typename SendIteratorType>
-    auto send_n(SendIteratorType first, SendIteratorType last) -> bool
-    {
-      while(first != last)
-      {
-        do_send(static_cast<std::uint8_t>(*first++));
-      }
-
-      return true;
-    }
-
-    auto recv(std::uint8_t& byte_to_recv) -> bool
-    {
-      // Read the (single byte from the) receive buffer.
-      byte_to_recv = static_cast<std::uint8_t>(recv_buffer);
-
-      return true;
-    }
+    auto recv() const -> buffer_value_type { return recv_buffer; }
 
     static auto select() -> void
     {
@@ -107,18 +88,6 @@
   private:
     buffer_value_type recv_buffer { };
 
-    auto do_send(const std::uint8_t byte_to_send) -> void
-    {
-      // Fill the Tx FIFO.
-      QSPI1->txdata.bit.data = byte_to_send;
-
-      // Wait for the Rx FIFO to be full.
-      while(QSPI1->ip.bit.rxwm == static_cast<std::uint32_t>(UINT8_C(0))) { ; }
-
-      // Read the (single byte from the) RX FIFO.
-      recv_buffer = static_cast<buffer_value_type>(QSPI1->rxdata.bit.data);
-    }
-
     static void FE310_SPI1_Init()
     {
       /* Configure the programmed IO pins */
@@ -134,7 +103,7 @@
       GPIO0->iof_en.bit.pin5 =  static_cast<std::uint32_t>(UINT8_C(1)); // SPI1_SCK
 
       /* Configure the SPI controller */
-      QSPI1->sckdiv.bit.div  =  static_cast<std::uint32_t>(UINT8_C(23)); // 4MHz
+      QSPI1->sckdiv.bit.div  =  static_cast<std::uint32_t>(UINT8_C(11)); // 8MHz, where [(96 - 1) -> 1MHz]
       QSPI1->sckmode.bit.pha =  static_cast<std::uint32_t>(UINT8_C(0));  // Clock phase = 0 ==> data sampled on rising edge and shifted out on the falling edge
       QSPI1->sckmode.bit.pol =  static_cast<std::uint32_t>(UINT8_C(0));  // Clock polarity = 0 ==> idle state of the clock is low
       QSPI1->csid            =  static_cast<std::uint32_t>(UINT8_C(0));  // SS0 is selected
@@ -144,10 +113,6 @@
       QSPI1->fmt.bit.dir     =  static_cast<std::uint32_t>(UINT8_C(0));  // FIFO is used
       QSPI1->fmt.bit.len     =  static_cast<std::uint32_t>(UINT8_C(8));  // 8 bits per frame
     }
-
-    template<const mcal_sram_uintptr_t ByteSizeTotal,
-             const mcal_sram_uintptr_t PageGranularity>
-    friend class mcal::memory::sram::mcal_memory_sram_generic_spi;
   };
 
   } } // namespace mcal::spi

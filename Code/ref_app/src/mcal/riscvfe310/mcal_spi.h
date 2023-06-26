@@ -16,24 +16,7 @@
 
   inline auto init(const config_type*) -> void { }
 
-  template<typename CommunicationType>
-  struct communication final
-  {
-    using communication_type = CommunicationType;
-
-    static auto get() -> communication_type&
-    {
-      static communication_type my_spi;
-
-      return my_spi;
-    }
-  };
-
-  using spi_channels_type = communication<::util::communication<::mcal::spi::spi1>>;
-
-  using communication_type = typename spi_channels_type::communication_type;
-
-  inline auto spi_channels() -> communication_type& { return spi_channels_type::get(); }
+  using communication_type = ::util::communication<::mcal::spi::spi1>;
 
   } }
 
