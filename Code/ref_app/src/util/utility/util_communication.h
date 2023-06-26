@@ -17,23 +17,23 @@
 
   namespace util
   {
-    namespace communication_buffer_depth_one_byte
-    {
-      using buffer_value_type = std::uint8_t;
-    } // namespace communication_buffer_depth_one_byte
-
-    template<typename CommunicationEngineType>
+    template<typename CommunicationBackendType>
     class communication final : private util::noncopyable
     {
     public:
-      using communication_engine_type = CommunicationEngineType;
+      using communication_backend_type = CommunicationBackendType;
 
-      static auto recv() -> communication_buffer_depth_one_byte::buffer_value_type { return my_com_engine.recv(); }
+      static auto init() -> void { communication_backend_type::backend_init(); }
 
-      static auto   select() -> void { communication_engine_type::select(); }
-      static auto deselect() -> void { communication_engine_type::deselect(); }
+      static auto recv() -> std::uint8_t { return my_recv_buffer; }
 
-      static auto send(const std::uint8_t byte_to_send) -> bool { return my_com_engine.send(byte_to_send); }
+      static auto   select() -> void { communication_backend_type::backend_select(); }
+      static auto deselect() -> void { communication_backend_type::backend_deselect(); }
+
+      static auto send(const std::uint8_t byte_to_send) -> bool
+      {
+        return communication_backend_type::backend_send(byte_to_send, &my_recv_buffer);
+      }
 
       template<typename SendIteratorType>
       static auto send_n(SendIteratorType first, SendIteratorType last) -> bool
@@ -42,23 +42,22 @@
 
         while(first != last)
         {
-          result_send_is_ok = (my_com_engine.send(static_cast<std::uint8_t>(*first++)) && result_send_is_ok);
+          result_send_is_ok =
+          (
+               communication_backend_type::backend_send(static_cast<std::uint8_t>(*first++), &my_recv_buffer)
+            && result_send_is_ok
+          );
         }
 
         return result_send_is_ok;
       }
 
-      static auto get() -> communication_engine_type& { return my_com_engine; }
-
     private:
-      static communication_engine_type my_com_engine;
+      static std::uint8_t my_recv_buffer;
     };
 
-    template<typename CommunicationEngineType>
-    typename communication<CommunicationEngineType>::communication_engine_type communication<CommunicationEngineType>::my_com_engine;
-
-    template<typename CommunicationEngineType>
-    using communication_type = communication<CommunicationEngineType>;
+    template<typename CommunicationBackendType>
+    std::uint8_t communication<CommunicationBackendType>::my_recv_buffer;
   }
 
 #endif // UTIL_COMMUNICATION_2012_05_31_H

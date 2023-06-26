@@ -10,10 +10,7 @@
 
   #include <array>
 
-  #include <mcal_cpu.h>
-  #include <mcal_spi.h>
   #include <mcal_memory/mcal_memory_sram_types.h>
-  #include <util/utility/util_communication.h>
   #include <util/utility/util_noncopyable.h>
 
   namespace mcal { namespace memory { namespace sram {
@@ -35,11 +32,7 @@
     static constexpr auto read_cmd  = static_cast<std::uint8_t>(UINT8_C(0x03));
     static constexpr auto write_cmd = static_cast<std::uint8_t>(UINT8_C(0x02));
 
-    mcal_memory_sram_generic_spi() = default;
-
-    ~mcal_memory_sram_generic_spi() = default;
-
-    auto read(const std::uint32_t address, std::uint8_t* p_byte_to_read) -> bool
+    static auto read(const std::uint32_t address, std::uint8_t* p_byte_to_read) -> bool
     {
       // Read one byte from external serial memory.
 
@@ -70,7 +63,7 @@
       return true;
     }
 
-    auto read_n(const std::uint32_t address, std::uint8_t* p_data_to_read, const std::size_t count) -> bool
+    static auto read_n(const std::uint32_t address, std::uint8_t* p_data_to_read, const std::size_t count) -> bool
     {
       // Read count bytes from external serial memory.
 
@@ -132,7 +125,7 @@
       return true;
     }
 
-    auto write(const std::uint32_t address, const std::uint8_t* p_byte_to_write) -> bool
+    static auto write(const std::uint32_t address, const std::uint8_t* p_byte_to_write) -> bool
     {
       // Write one byte to external serial memory.
 
@@ -161,7 +154,7 @@
       return true;
     }
 
-    auto write_n(const std::uint32_t address, const std::uint8_t* p_data_to_write, const std::size_t count) -> bool
+    static auto write_n(const std::uint32_t address, const std::uint8_t* p_data_to_write, const std::size_t count) -> bool
     {
       // Write count bytes to external serial memory.
 

@@ -33,27 +33,18 @@
   #include <mcal_irq.h>
 
   #include <util/utility/util_communication.h>
+  #include <util/utility/util_noncopyable.h>
 
   namespace mcal { namespace spi {
 
-  class spi1
+  class spi1 : private ::util::noncopyable
   {
-  private:
-    using buffer_value_type = ::util::communication_buffer_depth_one_byte::buffer_value_type;
-
   public:
-    spi1()
-    {
-      FE310_SPI1_Init();
+    spi1() = delete;
 
-      // Set the Rx watermark to (1 - 1 = 0), since we will restrict
-      // the driver to sending/receiving 1 byte only per transfer.
-      QSPI1->rxmark.bit.rxmark = static_cast<std::uint32_t>(UINT8_C(0));
-    }
+    ~spi1() = delete;
 
-    ~spi1() = default;
-
-    auto send(const std::uint8_t byte_to_send) -> bool
+    static auto backend_send(const std::uint8_t byte_to_send, std::uint8_t* p_byte_to_receive) -> bool
     {
       // Fill the Tx FIFO.
       QSPI1->txdata.bit.data = byte_to_send;
@@ -62,14 +53,12 @@
       while(QSPI1->ip.bit.rxwm == static_cast<std::uint32_t>(UINT8_C(0))) { ; }
 
       // Read the (single byte from the) RX FIFO.
-      recv_buffer = static_cast<buffer_value_type>(QSPI1->rxdata.bit.data);
+      *p_byte_to_receive = static_cast<std::uint8_t>(QSPI1->rxdata.bit.data);
 
       return true;
     }
 
-    auto recv() const -> buffer_value_type { return recv_buffer; }
-
-    static auto select() -> void
+    static auto backend_select() -> void
     {
       mcal::irq::disable_all();
 
@@ -77,7 +66,7 @@
       QSPI1->csmode.bit.mode = static_cast<std::uint32_t>(UINT8_C(2));
     }
 
-    static auto deselect() -> void
+    static auto backend_deselect() -> void
     {
       // Set CS control mode (OFF).
       QSPI1->csmode.bit.mode = static_cast<std::uint32_t>(UINT8_C(3));
@@ -85,10 +74,7 @@
       mcal::irq::enable_all();
     }
 
-  private:
-    buffer_value_type recv_buffer { };
-
-    static void FE310_SPI1_Init()
+    static void backend_init()
     {
       /* Configure the programmed IO pins */
       GPIO0->iof_sel.bit.pin2 = static_cast<std::uint32_t>(UINT8_C(0)); // SPI1_SS0
@@ -112,6 +98,10 @@
       QSPI1->fmt.bit.endian  =  static_cast<std::uint32_t>(UINT8_C(0));  // Transmit most-significant bit (MSB) first
       QSPI1->fmt.bit.dir     =  static_cast<std::uint32_t>(UINT8_C(0));  // FIFO is used
       QSPI1->fmt.bit.len     =  static_cast<std::uint32_t>(UINT8_C(8));  // 8 bits per frame
+
+      // Set the Rx watermark to (1 - 1 = 0), since we will restrict
+      // the driver to sending/receiving 1 byte only per transfer.
+      QSPI1->rxmark.bit.rxmark = static_cast<std::uint32_t>(UINT8_C(0));
     }
   };
 

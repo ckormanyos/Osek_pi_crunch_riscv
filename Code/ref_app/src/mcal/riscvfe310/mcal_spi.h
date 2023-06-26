@@ -14,9 +14,9 @@
 
   using config_type = void;
 
-  inline auto init(const config_type*) -> void { }
-
   using communication_type = ::util::communication<::mcal::spi::spi1>;
+
+  inline auto init(const config_type*) -> void { communication_type::init(); }
 
   } }
 
