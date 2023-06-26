@@ -13,26 +13,10 @@
 
   namespace mcal { namespace memory { namespace sram {
 
-  template<typename SramDeviceType>
-  struct sram_device
-  {
-    using sram_device_type = SramDeviceType;
-
-    static sram_device_type my_sram;
-  };
-
-  template<typename SramDeviceType>
-  typename sram_device<SramDeviceType>::sram_device_type sram_device<SramDeviceType>::my_sram;
-
   using mcal_memory_sram_device_type =
     mcal_memory_sram_generic_spi<static_cast<mcal_sram_uintptr_t>(UINT32_C(0x00400000)),
                                  static_cast<mcal_sram_uintptr_t>(UINT32_C(0x00000400)),
                                  mcal::spi::communication_type>;
-
-  inline auto mcal_memory_sram_device() -> mcal_memory_sram_device_type&
-  {
-    return sram_device<mcal_memory_sram_device_type>::my_sram;
-  }
 
   } } } // namespace mcal::memory::sram
 
