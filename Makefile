@@ -47,7 +47,7 @@ PYTHON    = python3
 # C Compiler flags
 ############################################################################################
 
-OPT_MODIFIED := -Os                                                   \
+OPT_MODIFIED := -O2                                                   \
                 -fno-reorder-blocks-and-partition                     \
                 -fno-reorder-functions
 
@@ -142,7 +142,6 @@ SRC_FILES := $(SRC_DIR)/Mcal/Clock                                              
              $(SRC_DIR)/ref_app/src/mcal/riscvfe310/mcal_led                                          \
              $(SRC_DIR)/ref_app/src/mcal/riscvfe310/mcal_memory_sram                                  \
              $(SRC_DIR)/ref_app/src/mcal/riscvfe310/mcal_port                                         \
-             $(SRC_DIR)/ref_app/src/mcal/riscvfe310/mcal_spi                                          \
              $(SRC_DIR)/ref_app/target/micros/riscvfe310/startup/crt0                                 \
              $(SRC_DIR)/ref_app/target/micros/riscvfe310/startup/crt0_init_ram                        \
              $(SRC_DIR)/ref_app/target/micros/riscvfe310/startup/crt1                                 \
